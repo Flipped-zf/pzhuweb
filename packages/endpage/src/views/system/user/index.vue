@@ -4,7 +4,10 @@
 			<div class="system-user-container">
 				<el-card shadow="hover">
 					<div class="system-user-search mb15">
-						<el-input size="default" placeholder="请输入用户名称" style="max-width: 180px" v-model="search"> </el-input>
+						<el-input size="default" placeholder="请输入用户名称" style="max-width: 180px; margin-right: 10px" v-model="search"> </el-input>
+						<el-tooltip class="box-item" effect="dark" content="刷新" placement="right">
+							<el-button :icon="RefreshRight" @click="initTableData" type="success" circle size="small" />
+						</el-tooltip>
 					</div>
 					<el-table :data="filterTableData" stripe style="width: 100%" v-loading="loading">
 						<el-table-column type="index" :index="totalIndex" label="序号" width="60" />
@@ -58,6 +61,7 @@
 <script lang="ts">
 import { toRefs, reactive, onMounted, ref, defineComponent, computed } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { RefreshRight } from '@element-plus/icons-vue';
 import AddUer from '/@/views/system/user/component/addUser.vue';
 import EditUser from '/@/views/system/user/component/editUser.vue';
 import request from '/@/api/users';
@@ -144,7 +148,7 @@ export default defineComponent({
 						};
 					});
 					state.tableData.total = data.length;
-
+					state.tableData.param.pageNum = 1;
 					state.tableData.allData = data;
 					loading.value = false;
 				})
@@ -167,7 +171,9 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(() => {
-					ElMessage.success('删除成功');
+					request.deleteUser(row.id).then((res) => {
+						res.success && ElMessage.success('删除成功');
+					});
 				})
 				.catch(() => {});
 		};
@@ -188,6 +194,7 @@ export default defineComponent({
 			onRowDel,
 			onHandleSizeChange,
 			onHandleCurrentChange,
+			initTableData,
 			...toRefs(state),
 			loading,
 			search,
@@ -196,6 +203,7 @@ export default defineComponent({
 			total,
 			themeConfig,
 			editableTabsValue,
+			RefreshRight,
 		};
 	},
 });

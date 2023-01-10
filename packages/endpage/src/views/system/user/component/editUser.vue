@@ -7,6 +7,12 @@
 		<div class="content" v-loading="loading">
 			<div class="divInfo" ref="divInfo">
 				<el-form label-position="right" ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" id="demo-ruleForm" size="large">
+					<el-form-item label="姓名" prop="userName">
+						<el-input v-model="ruleForm.userName" />
+					</el-form-item>
+					<el-form-item label="邮箱" prop="email">
+						<el-input v-model="ruleForm.email" />
+					</el-form-item>
 					<el-form-item label="联系方式" prop="phone">
 						<el-input v-model="ruleForm.phone" />
 					</el-form-item>
@@ -26,7 +32,7 @@
 					<el-avatar :size="100" :src="data.src" />
 				</el-tooltip>
 			</div>
-			<p align="right" style="padding-right: 30px">
+			<p align="right" style="padding-right: 30px; padding-top: 20px">
 				<el-button type="primary" @click="handelSave">提交</el-button>
 			</p>
 		</div>
@@ -38,26 +44,15 @@
 
 <script setup lang="ts">
 import { Edit } from '@element-plus/icons-vue';
-import { onMounted, reactive, ref } from 'vue';
-import { Back, TimelineMax, Bounce } from 'gsap';
-// import CropperImageUpload from '../cropperUtil/components/cropper-image-upload.vue';
+import { reactive, ref, watch } from 'vue';
 import { CropperImageUpload } from '@tommyzf/common';
-import qiniu from '../../common/qiniu';
+import qiniu from '/@/utils/qiniu.js';
 import request from '/@/api/users';
-import { ElMessage } from 'element-plus';
-import { ElNotification } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
 
-interface RuleFormRow {
-	userName: string;
-	email: string;
-	phone: string;
-	major: number;
-	domain: number;
-	introduction: string;
-}
-const router = new useRouter();
+const router = useRouter();
 const ruleFormRef = ref(null);
 const divInfo = ref(null);
 const loading = ref(false);
@@ -83,29 +78,46 @@ const data = reactive({
 	],
 	src: '',
 	imageDialog: false,
-	loading: false,
 });
 const ruleForm = reactive({
+	userName: '',
+	email: '',
 	phone: '',
 	schoolMajor: [],
 	domain: [],
 	introduction: '',
 });
-axios.get(base.getInitInfo).then((res) => {
-	if (res.data.success) {
-		ruleForm.phone = res.data.data.phone;
-		ruleForm.introduction = res.data.data.description;
-		data.src = res.data.data.avatar || data.src;
-		ruleForm.schoolMajor = [res.data.data.school, res.data.data.major];
-		ruleForm.domain = [res.data.data.domain];
+const props = defineProps({
+	editUserData: Object,
+});
+const initData = () => {
+	ruleForm.userName = props.editUserData.User.name;
+	ruleForm.email = props.editUserData.User.email;
+	ruleForm.phone = props.editUserData.phone;
+	ruleForm.introduction = props.editUserData.description;
+	data.src = props.editUserData.avatar || data.src;
+	ruleForm.schoolMajor = [props.editUserData.School.id, props.editUserData.Major.id];
+	ruleForm.domain = [props.editUserData.Domain.id];
+	request.initUserMajor().then((res) => {
+		if (res.data.success) {
+			data.SchoolMajorOptions = res.data.data.schoolmajor;
+			data.DomainOptions = res.data.data.domain;
+		}
+	});
+};
+initData();
+request.initUserMajor().then((res) => {
+	if (res.success) {
+		data.SchoolMajorOptions = res.data.schoolmajor;
+		data.DomainOptions = res.data.domain;
 	}
 });
-axios.get(base.getInitMessage).then((res) => {
-	if (res.data.success) {
-		data.SchoolMajorOptions = res.data.data.schoolmajor;
-		data.DomainOptions = res.data.data.domain;
+watch(
+	() => props.editUserData,
+	() => {
+		initData();
 	}
-});
+);
 
 // 联系方式验证
 const validatorPhone = (rule, value, callback) => {
@@ -125,20 +137,12 @@ const validatorDescription = (rule, value, callback) => {
 	}
 };
 const rules = reactive({
+	userName: [{ required: true }],
+	email: [{ type: 'email', required: true }],
 	phone: [{ required: true, validator: validatorPhone, trigger: 'blur' }],
 	schoolMajor: [{ required: true }],
 	domain: [{ required: true }],
 	introduction: [{ required: true, validator: validatorDescription, trigger: 'blur' }],
-});
-
-onMounted(() => {
-	let tl = new TimelineMax();
-	tl.from('.divTx', 1.5, {
-		opacity: 0,
-		x: 200,
-		duration: 1.5,
-		ease: Back.easeInOut,
-	}).from(divInfo.value, 1, { opacity: 0, x: -100, ease: Bounce.easeOut }, 1);
 });
 const uploadImgSuccessHandler = function (state) {
 	// console.log('上传成功')
@@ -179,24 +183,23 @@ const handelSave = (e) => {
 				});
 				qiniu(dataBlob)
 					.then((res) => {
-						axios
-							.post(base.uploadUserInfo, {
+						request
+							.updateUser({
+								id: props.editUserData.id,
+								name: ruleForm.userName,
+								email: ruleForm.email,
 								phone: ruleForm.phone,
 								schoolMajor: ruleForm.schoolMajor,
 								domain: ruleForm.domain[0],
 								description: ruleForm.introduction,
 								avatar: res.key,
-								status: 1,
+								isCDN: 1,
 							})
 							.then((res) => {
-								if (res.data.success) {
-									data.loading = false;
-									ElMessage({
-										message: '信息保存成功',
-										type: 'success',
-									});
+								if (res.success) {
+									loading.value = false;
 									setTimeout(() => {
-										router.push('/user/article');
+										router.replace('/system/user');
 									}, 500);
 								} else {
 									ElMessage({
@@ -214,27 +217,26 @@ const handelSave = (e) => {
 						});
 					});
 			} else {
-				axios
-					.post(base.uploadUserInfo, {
+				request
+					.updateUser({
+						id: props.editUserData.id,
+						name: ruleForm.userName,
+						email: ruleForm.email,
 						phone: ruleForm.phone,
 						schoolMajor: ruleForm.schoolMajor,
 						domain: ruleForm.domain[0],
 						description: ruleForm.introduction,
 						avatar: data.src,
-						status: 0,
+						isCDN: 0,
 					})
 					.then((res) => {
-						if (res.data.success) {
-							ElMessage({
-								message: '信息保存成功',
-								type: 'success',
-							});
+						if (res.success) {
 							loading.value = false;
 							setTimeout(() => {
-								router.push('/user/article');
+								router.replace('/system/user');
 							}, 500);
 						}
-						data.loading = false;
+						loading.value = false;
 					});
 			}
 		}
@@ -254,7 +256,7 @@ const handelSave = (e) => {
 </style>
 
 <style scoped lang="less">
-.changeInfo {
+.system-edit-user-container {
 	margin: 200px auto;
 	width: 800px;
 	background-color: white;
@@ -285,7 +287,7 @@ const handelSave = (e) => {
 	}
 }
 @media screen and (max-width: 800px) {
-	.changeInfo {
+	.system-edit-user-container {
 		width: 100%;
 		.content {
 			padding-left: 0;

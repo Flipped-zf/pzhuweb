@@ -4,4 +4,3 @@ declare module 'splitpanes';
 declare module 'js-cookie';
 declare module 'sortablejs';
 declare module 'js-md5';
-declare module 'gsap';

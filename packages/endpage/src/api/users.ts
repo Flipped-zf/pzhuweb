@@ -26,10 +26,34 @@ const request = {
 				});
 		});
 	},
-	updateUser: (id: any, data: any) => {
+	updateUser: (data: any) => {
 		return new Promise((resolve, reject) => {
 			axios
 				.post(base.updateUserInfo, data)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	deleteUser: (id) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.deleteUser, { id })
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	addUserInfo: (data) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.addUserInfo, data)
 				.then((res) => {
 					resolve(res.data);
 				})
