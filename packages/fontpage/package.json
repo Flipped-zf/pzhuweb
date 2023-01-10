@@ -1,0 +1,23 @@
+{
+  "name": "fontpage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "mydev": "pnpm -F fontpage run dev",
+    "mybuild": "pnpm -F \"fontpage\" run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tommyzf/common": "workspace:^1.0.0",
+    "gsap": "^3.9.1",
+    "lottie-web": "^5.9.6",
+    "magnific-popup": "^1.1.0",
+    "swiper": "^8.0.7"
+  }
+}

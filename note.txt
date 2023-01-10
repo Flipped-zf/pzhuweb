@@ -1,0 +1,17 @@
+packages.json 中不能设置type属性不然prettier不生效
+
+slice substring - start end(不包括)不改变原
+substr - start length 不改变原
+splice - start length 改变
+
+::v-deep -> :deep()
+
+pnpm -F common publish --no-git-checks --access public 发布包
+
+packages下的包package.json中可以设置src or dist 的文件
+
+"lib": ["dom"]不生效 用 /// <reference lib="dom" />
+
+outer.getRoutes() 平铺
+
+el-image 有原生 loading="lazy" 懒加载

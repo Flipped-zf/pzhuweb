@@ -1,0 +1,8 @@
+sessionStorage -> token userinfo storage.ts clear
+Cookie -> yourStuNum yourPassword storage.ts removeAllCookies
+
+axios.get 参数{ params }
+axios.post 参数 data 
+
+两种方式验证权限
+

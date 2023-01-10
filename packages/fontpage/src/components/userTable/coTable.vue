@@ -1,0 +1,160 @@
+<template>
+	<el-table v-loadmore="myLoad" size="large" :data="data.co" max-height="530" style="width: 100%">
+		<template #empty>
+			<el-skeleton v-if="isLoading" :rows="5" animated />
+			<span v-else>暂无数据</span>
+		</template>
+		<el-table-column :fixed="isPhone" label="发布时间" sortable prop="created_at">
+			<template #default="scope">
+				{{ dayjs(scope.row.created_at).format('YYYY-MM-DD') }}
+			</template>
+		</el-table-column>
+		<el-table-column min-width="100" label="技术标签" prop="Article.Technology.name">
+			<template #default="scope">
+				<el-tag class="ml-2" type="success">{{ scope.row.Article.Technology.name }}</el-tag>
+			</template>
+		</el-table-column>
+		<el-table-column min-width="300" label="文章名称" prop="Article.title" />
+		<el-table-column min-width="150" align="center">
+			<template #header>
+				<div style="display: flex; align-items: center">
+					<el-select size="small" style="width: 40%" @change="myChange" v-model="value" clearable placeholder="全部资源">
+						<el-option v-for="(item, index) in data.tagType" :key="item.index" :label="item.label" :value="item.value" />
+					</el-select>
+					<el-input :prefix-icon="Search" v-model="data.search" @keyup.enter.native="mySearch" size="small" placeholder="Type to search" />
+				</div>
+			</template>
+			<template #default="scope" v-if="isMyself">
+				<el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit </el-button>
+				<el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete </el-button>
+			</template>
+		</el-table-column>
+		<template #append>
+			<p v-if="isLoading">
+				<el-divider content-position="center">加载中...</el-divider>
+			</p>
+			<p v-if="isNot">
+				<el-divider content-position="center">到底了</el-divider>
+			</p>
+		</template>
+	</el-table>
+</template>
+
+<script setup>
+import { reactive, onMounted, inject, ref } from 'vue';
+import user from '../../api/user';
+import dayjs from 'dayjs';
+import { Search } from '@element-plus/icons-vue';
+import { useRoute } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import { useStore } from '@/store';
+
+const userStore = useStore();
+const route = useRoute();
+
+const isPhone = inject('isPhone');
+const isLoading = ref(true);
+const isNot = ref(false);
+const isMyself = inject('isMyself');
+const value = ref('');
+const data = reactive({
+	co: [],
+	articleType: [],
+	tagType: [],
+	search: '',
+	beg: 0,
+	end: 10,
+	index: 0,
+	yeshu: 1,
+});
+onMounted(() => {});
+
+getArticle();
+
+function getArticle() {
+	isLoading.value = true;
+	isNot.value = false;
+	user
+		.getUserCollect({
+			beg: data.beg,
+			end: data.end,
+			index: data.index,
+			id: route.params.id || userStore.userInfo.id,
+		})
+		.then((res) => {
+			data.co = res.data.collect || [];
+			data.articleType = res.data.menu || [];
+			data.tagType = data.articleType.map((item) => {
+				return { label: item.name, value: item.id + '' };
+			});
+			isLoading.value = false;
+			if (0 < data.co.length && data.co.length < data.yeshu * 10) {
+				isNot.value = true;
+			}
+		});
+}
+
+const handleEdit = (index, row) => {
+	console.log(index, row);
+};
+const handleDelete = (index, row) => {
+	console.log(index, row);
+};
+
+function myChange(val) {
+	data.search = '';
+	if (val == '') {
+		val = 0;
+	}
+	data.yeshu = 1;
+	data.index = val;
+	getArticle();
+}
+
+function mySearch() {
+	// console.log('hello')
+	if (data.search == '') {
+		ElMessage({
+			showClose: true,
+			message: '请输入关键字',
+			type: 'error',
+		});
+	} else {
+		value.value = '';
+		getSearchData();
+	}
+}
+
+function getSearchData() {
+	isLoading.value = true;
+	isNot.value = false;
+	user
+		.searchUserCollect({
+			value: data.search,
+			id: route.params.id || userStore.userInfo.id,
+			// route.params.id || store.state.userInfo.id
+		})
+		.then((res) => {
+			data.co = res.data;
+			isLoading.value = false;
+			if (0 < data.co.length && data.co.length < data.yeshu * 10) {
+				isNot.value = true;
+			}
+		});
+}
+const myLoad = () => {
+	if (!isNot.value) {
+		if (data.search == '') {
+			data.end += 10;
+			data.yeshu++;
+			getArticle();
+		} else {
+			data.end += 10;
+			data.yeshu++;
+			getSearchData();
+		}
+	}
+};
+</script>
+
+<style scoped></style>

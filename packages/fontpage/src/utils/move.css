@@ -1,0 +1,13 @@
+.myMove span{
+  display:none;
+  position:absolute;
+  top:5px;
+  right:5px;
+  font-size:18px;
+  font-weight:bold;
+  color:white;
+  cursor:pointer;
+}
+/*.myMove:hover span {*/
+/*  display: block;*/
+/*}*/
