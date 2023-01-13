@@ -1,4 +1,6 @@
 /* eslint-disable */
+/// <reference types="vite/client" />
+/// <reference types="@types/lodash" />
 
 // 声明文件，*.vue 后缀的文件交给 vue 模块来处理
 declare module '*.vue' {

@@ -33,6 +33,7 @@
 				</el-tooltip>
 			</div>
 			<p align="right" style="padding-right: 30px; padding-top: 20px">
+				<el-button type="primary" @click="resetPassword">重置密码</el-button>
 				<el-button type="primary" @click="handelSave">提交</el-button>
 			</p>
 		</div>
@@ -51,6 +52,7 @@ import request from '/@/api/users';
 import { ElMessage, ElNotification } from 'element-plus';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
+import { validatorDescription, validatorPhone } from './common.ts';
 
 const router = useRouter();
 const ruleFormRef = ref(null);
@@ -119,23 +121,6 @@ watch(
 	}
 );
 
-// 联系方式验证
-const validatorPhone = (rule, value, callback) => {
-	const treg = /^[1-9]\d*$|^0$/;
-	if (value && treg.test(value) === true) {
-		callback();
-	} else {
-		callback('请输入11位的手机号');
-	}
-};
-// 个人简介验证
-const validatorDescription = (rule, value, callback) => {
-	if (!value || value.length < 20) {
-		callback();
-	} else {
-		callback('个人简介控制在20字以内');
-	}
-};
 const rules = reactive({
 	userName: [{ required: true }],
 	email: [{ type: 'email', required: true }],
@@ -166,6 +151,11 @@ const dataURLtoBlob = (dataurl) => {
 		u8arr[n] = bstr.charCodeAt(n);
 	}
 	return new Blob([u8arr], { type: mime });
+};
+const resetPassword = () => {
+	request.resetPassword(props.editUserData.id).then((res) => {
+		console.log(123);
+	});
 };
 // 保存用户信息
 const handelSave = (e) => {
@@ -259,7 +249,7 @@ const handelSave = (e) => {
 .system-edit-user-container {
 	margin: 200px auto;
 	width: 800px;
-	background-color: white;
+	background-color: var(--next-bg-main-color);
 	border-radius: 10px;
 	padding: 10px;
 	.headTip {

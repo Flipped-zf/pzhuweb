@@ -1,5 +1,11 @@
 <template>
-	<el-tabs v-model="editableTabsValue" :tab-position="themeConfig.isPhone ? 'top' : 'left'" style="height: 100%" class="demo-tabs">
+	<el-tabs
+		v-model="editableTabsValue"
+		:tab-position="themeConfig.isPhone ? 'top' : 'left'"
+		style="height: 100%"
+		class="demo-tabs"
+		v-loading="loading"
+	>
 		<el-tab-pane label="全部">
 			<div class="system-user-container">
 				<el-card shadow="hover">
@@ -9,10 +15,10 @@
 							<el-button :icon="RefreshRight" @click="initTableData" type="success" circle size="small" />
 						</el-tooltip>
 					</div>
-					<el-table :data="filterTableData" stripe style="width: 100%" v-loading="loading">
+					<el-table :data="filterTableData" stripe style="width: 100%">
 						<el-table-column type="index" :index="totalIndex" label="序号" width="60" />
 						<el-table-column prop="id" label="学号" show-overflow-tooltip></el-table-column>
-						<el-table-column prop="name" label="姓名" min-width="110" :fixed="themeConfig.isPhone" show-overflow-tooltip>
+						<el-table-column prop="name" label="姓名" min-width="140px" :fixed="themeConfig.isPhone" show-overflow-tooltip>
 							<template #default="scope">
 								<div style="display: flex; align-items: center">
 									<el-avatar style="width: 40px; height: 40px" :src="scope.row.avatar" fit="cover" />
@@ -30,7 +36,7 @@
 					</template>
 				</el-table-column> -->
 						<!-- <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column> -->
-						<el-table-column prop="createTime" label="加入时间" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="createTime" label="加入时间" sortable show-overflow-tooltip></el-table-column>
 						<el-table-column label="操作" width="100">
 							<template #default="scope">
 								<el-button :disabled="scope.row.name === 'admin'" size="small" text type="primary" @click="onOpenEditUser(scope.row)">修改</el-button>
@@ -55,6 +61,7 @@
 		></el-tab-pane>
 		<el-tab-pane label="修改成员" lazy :disabled="editableTabsValue !== '1'"> <EditUser :editUserData="editData" /> </el-tab-pane>
 		<el-tab-pane label="添加成员" lazy> <AddUer /> </el-tab-pane>
+		<el-tab-pane label="审核成员" lazy> <checkUser /> </el-tab-pane>
 	</el-tabs>
 </template>
 
@@ -64,6 +71,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { RefreshRight } from '@element-plus/icons-vue';
 import AddUer from '/@/views/system/user/component/addUser.vue';
 import EditUser from '/@/views/system/user/component/editUser.vue';
+import checkUser from '/@/views/system/user/component/checkUser.vue';
 import request from '/@/api/users';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { storeToRefs } from 'pinia';
@@ -95,7 +103,7 @@ interface TableDataState {
 
 export default defineComponent({
 	name: 'SystemUser',
-	components: { AddUer, EditUser },
+	components: { AddUer, EditUser, checkUser },
 	setup() {
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -112,7 +120,7 @@ export default defineComponent({
 			},
 			editData: {},
 		});
-		const loading = ref(false);
+		const loading = ref(true);
 		const search = ref('');
 
 		const filterTableData = computed(() => {
@@ -170,10 +178,11 @@ export default defineComponent({
 				cancelButtonText: '取消',
 				type: 'warning',
 			})
-				.then(() => {
-					request.deleteUser(row.id).then((res) => {
+				.then(async () => {
+					await request.deleteUser(row.id).then((res) => {
 						res.success && ElMessage.success('删除成功');
 					});
+					initTableData();
 				})
 				.catch(() => {});
 		};

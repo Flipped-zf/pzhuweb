@@ -302,6 +302,9 @@ function goDerails(num) {
 		box-shadow: 0px 8px 15px rgba(48, 48, 48, 0.4);
 		letter-spacing: 0.5px;
 	}
+	.swiper__title {
+		font-size: 18px;
+	}
 }
 
 .swiper .swiper-container-horizontal > .swiper-pagination-bullets,

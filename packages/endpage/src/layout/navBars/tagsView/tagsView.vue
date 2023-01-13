@@ -60,7 +60,7 @@ import {
 	watch,
 	defineComponent,
 } from 'vue';
-import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router';
 import Sortable from 'sortablejs';
 import { ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
@@ -234,9 +234,9 @@ export default defineComponent({
 				// 修复：https://gitee.com/lyt-top/vue-next-admin/issues/I3YX6G
 				let item: any = '';
 				if (to && to.meta.isDynamic) {
-					// 动态路由（xxx/:id/:name"）：参数不同，开启多个 tagsview
-					if (!getThemeConfig.value.isShareTagsView) await solveAddTagsView(path, to);
-					else await singleAddTagsView(path, to);
+					// 动态路由（xxx/:id/:name"）：，开启多个 tagsview参数不同
+					if (!getThemeConfig.value.isShareTagsView) await solveAddTagsView(path, to); //多标签 
+					else await singleAddTagsView(path, to);//单标签
 					if (state.tagsViewList.some((v: any) => v.path === to.meta.isDynamicPath)) return false;
 					item = state.tagsViewRoutesList.find((v: any) => v.path === to.meta.isDynamicPath);
 				} else {
@@ -562,13 +562,31 @@ export default defineComponent({
 			getTagsViewRoutes();
 			initSortable();
 		});
-		// 路由更新时（组件内生命钩子）
-		onBeforeRouteUpdate(async (to) => {
+		// 路由更新时（组件内生命钩子） 
+		// onBeforeRouteUpdate(async (to) => { //没触发
+		// 	state.routeActive = setTagsViewHighlight(to);
+		// 	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
+		// 	await addTagsView(to.path, to);
+		// 	getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+		// });
+		onBeforeRouteLeave(async (to) => { //可以
 			state.routeActive = setTagsViewHighlight(to);
 			state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
 			await addTagsView(to.path, to);
 			getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-		});
+		})
+		// watch(
+		// 	() => route.path,
+		// 	async () => {
+		// 		state.routeActive = setTagsViewHighlight(route);
+		// 		state.routePath = route.meta.isDynamic ? route.meta.isDynamicPath : route.path;
+		// 		await addTagsView(route.path, route);
+		// 		getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+		// 	},
+		// 	{
+		// 		deep: true,
+		// 	}
+		// );
 		// 监听路由的变化，动态赋值给 tagsView
 		watch(
 			pinia.state,

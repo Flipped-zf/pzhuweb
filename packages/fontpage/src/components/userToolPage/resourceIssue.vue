@@ -103,7 +103,6 @@ const issueData = reactive({
 	achievementlink: null,
 	abstract: null,
 	typeid: null,
-	userid: Cookies.get('yourStuNum'),
 });
 const rformRef = ref(null);
 const rules = reactive({
@@ -120,7 +119,6 @@ async function handelIssue() {
 	issueData.loading = true;
 	const data = {
 		id: issueData.id,
-		userid: Cookies.get('yourStuNum'),
 		title: issueData.title,
 		link: issueData.achievementlink,
 		typeid: issueData.typeid,
@@ -168,7 +166,6 @@ aApi.getResourceIssue(issueData.id).then((res) => {
 		issueData.achievementType = res.data;
 	} else {
 		issueData.id = res.data.resource[0].id;
-		issueData.userid = res.data.resource[0].userid;
 		issueData.typeid = res.data.resource[0].typeid;
 		issueData.title = res.data.resource[0].title;
 		issueData.achievementlink = res.data.resource[0].link;
@@ -191,7 +188,6 @@ const handlechange = async (uploadFile, uploadFiles) => {
 			aApi
 				.uploadResourceCover({
 					id: issueData.id,
-					userid: issueData.userid,
 					key: res.key,
 					status: issueData.status,
 				})
@@ -228,7 +224,6 @@ const handlechange2 = async (uploadFile) => {
 			aApi
 				.uploadResourceAttachment({
 					id: issueData.id,
-					userid: issueData.userid,
 					key: res.key,
 					status: issueData.status,
 				})

@@ -1,5 +1,5 @@
 <template>
-	<div class="system-add-user-container">
+	<div class="system-add-user-container" v-loading="loading">
 		<el-form status-icon :model="ruleForm" ref="ruleFormRef" size="default" :rules="rules" label-width="90px">
 			<el-row :gutter="35">
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -75,8 +75,7 @@ import request from '/@/api/users';
 import { ElMessage, ElNotification } from 'element-plus';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
-import { validatorNum, validatorPassword } from '@tommyzf/common';
-
+import { validatorNum, validatorPassword, validatorDescription, validatorPhone } from './common.ts';
 const router = useRouter();
 const ruleFormRef = ref(null);
 const loading = ref(false);
@@ -96,8 +95,8 @@ const ruleForm = reactive<UserState>({
 	name: '',
 	password: '',
 	passwordConfirm: '',
-	email: '468369392@qq.com',
-	phone: '15328986407',
+	email: '',
+	phone: '',
 	schoolMajor: [],
 	domain: [],
 	introduction: '',
@@ -131,28 +130,18 @@ request.initUserMajor().then((res) => {
 		data.DomainOptions = res.data.domain;
 	}
 });
-// 联系方式验证
-const validatorPhone = (rule, value, callback) => {
-	const treg = /^[1-9]\d*$|^0$/;
-	if (value && treg.test(value) === true) {
+const confirmPassword = (rule, value, callback) => {
+	if (value && value === ruleForm.password) {
 		callback();
 	} else {
-		callback('请输入11位的手机号');
-	}
-};
-// 个人简介验证
-const validatorDescription = (rule, value, callback) => {
-	if (!value || value.length < 20) {
-		callback();
-	} else {
-		callback('个人简介控制在20字以内');
+		callback('请确保密码一致');
 	}
 };
 const rules = reactive({
 	id: [{ validator: validatorNum, required: true }],
 	name: [{ required: true }],
 	password: [{ validator: validatorPassword, required: true }],
-	passwordConfirm: [{ required: true }],
+	passwordConfirm: [{ validator: confirmPassword, required: true }],
 	email: [{ type: 'email', required: true }],
 	phone: [{ required: true, validator: validatorPhone, trigger: 'blur' }],
 	schoolMajor: [{ required: true }],

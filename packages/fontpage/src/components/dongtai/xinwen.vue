@@ -212,6 +212,9 @@ function goDerails(s) {
 .post-module .post-content .post-meta {
 	margin: 30px 0 0;
 	color: #999999;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .post-module .post-content .post-meta .timestamp {

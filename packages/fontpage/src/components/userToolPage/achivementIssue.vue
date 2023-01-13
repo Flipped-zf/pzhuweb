@@ -101,7 +101,6 @@ const issueData = reactive({
 	attachment: null, // 附件的cdn地址
 	abstract: null,
 	typeid: null,
-	userid: Cookies.get('yourStuNum'),
 });
 const rformRef = ref(null);
 const rules = reactive({
@@ -121,7 +120,6 @@ async function handelIssue() {
 
 	const data = {
 		id: issueData.id,
-		userid: issueData.userid,
 		title: issueData.title,
 		achievementlink: issueData.achievementlink,
 		typeid: issueData.typeid,
@@ -171,7 +169,6 @@ aApi.getAchievementIssue(issueData.id).then((res) => {
 		issueData.achievementType = res.data;
 	} else {
 		issueData.id = res.data.achievement[0].id;
-		issueData.userid = res.data.achievement[0].userid;
 		issueData.typeid = res.data.achievement[0].typeid;
 		issueData.title = res.data.achievement[0].title;
 		issueData.achievementlink = res.data.achievement[0].achievementlink;
@@ -194,7 +191,6 @@ const handlechange = async (uploadFile, uploadFiles) => {
 			aApi
 				.uploadAchievementCover({
 					id: issueData.id,
-					userid: issueData.userid,
 					key: res.key,
 					status: issueData.status,
 				})
@@ -231,7 +227,6 @@ const handlechange2 = async (uploadFile) => {
 			aApi
 				.uploadAchievementAttachment({
 					id: issueData.id,
-					userid: issueData.userid,
 					key: res.key,
 					status: issueData.status,
 				})

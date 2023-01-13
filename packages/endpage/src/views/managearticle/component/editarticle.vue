@@ -91,8 +91,8 @@ import { ref, onMounted, reactive, computed } from 'vue';
 import { createEditor, createToolbar } from '@wangeditor/editor';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import qiniu from '../../common/qiniu';
-import aApi from '../../api/articleEdit';
+import qiniu from '/@/utils/qiniu';
+import aApi from '/@/api/managearticle';
 import { Delete, Plus, UploadFilled } from '@element-plus/icons-vue';
 
 const route = useRoute();
@@ -100,7 +100,6 @@ const router = useRouter();
 const imgList = ref([]);
 const articleData = reactive({
 	id: route.query.id || 0,
-	status: 1, // 默认1数据添加状态，2数据更新状态,
 	menu: [], // 分类
 	technology: [], // 技术标签
 	article: null, // 文章资源
@@ -216,12 +215,9 @@ async function submitForm() {
 	if (checkedValue()) {
 		const imgListok = data.editor.getElemsByType('image').map((item) => item.alt);
 		const delimglist = imgList.value.filter((item) => !imgListok.includes(item));
-		console.log(imgListok);
-		console.log(imgList.value);
 		const mydata = {
 			id: articleData.id,
 			title: articleData.title,
-			status: articleData.status,
 			abstract,
 			context: data.editor.getHtml(),
 			technologyid: articleData.selectTechnology,
@@ -235,14 +231,14 @@ async function submitForm() {
 			if (res.success) {
 				setTimeout(() => {
 					ElMessage({
-						message: '文章发布成功',
+						message: '文章修改成功',
 						type: 'success',
 					});
-					router.push('/dongtai');
+					router.push('/managearticle');
 				}, 500);
 			} else {
 				ElMessage({
-					message: '发布失败!!!',
+					message: '修改失败!!!',
 					type: 'error',
 				});
 			}
@@ -258,17 +254,11 @@ aApi.getArticleEdit(articleData.id).then((result) => {
 	if (res.success) {
 		articleData.menu = res.data.menu;
 		articleData.technology = res.data.technology;
-		articleData.id = res.data.article.id;
-		articleData.status = res.data.article.status;
-	} else {
-		articleData.menu = res.data.menu;
-		articleData.technology = res.data.technology;
 		articleData.article = res.data.article[0];
 		articleData.id = res.data.article[0].id;
 		articleData.postlink = res.data.article[0].postlink;
 		articleData.title = res.data.article[0].title;
 		articleData.keywords = res.data.article[0].keywords;
-		articleData.status = 2;
 		articleData.date = res.data.article[0].created_at ? new Date(res.data.article[0].created_at) : new Date();
 		// data.valueHtml = res.data.article[0].context ?? '';
 		data.editor?.dangerouslyInsertHtml(res.data.article[0].context ?? '');
@@ -288,12 +278,10 @@ const handlechange = async (uploadFile, uploadFiles) => {
 				.uploadArticleeCover({
 					id: articleData.id,
 					key: res.key,
-					status: articleData.status,
 				})
 				.then((res) => {
 					articleData.postlink = res.data.postlink;
 					articleData.id = res.data.id;
-					articleData.status = res.data.status;
 					mygo.value = false;
 				});
 		})

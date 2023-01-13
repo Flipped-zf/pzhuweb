@@ -1,23 +1,11 @@
 import base from './base';
 import axios from '../utils/request';
 
-const request = {
-	getUsers: () => {
+const managearticle = {
+	getArticleInfo: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(base.users)
-				.then((res) => {
-					resolve(res.data.data);
-				})
-				.catch((error) => {
-					reject(error.data);
-				});
-		});
-	},
-	initUserMajor: () => {
-		return new Promise((resolve, reject) => {
-			axios
-				.get(base.initUserMajor)
+				.post(base.getArticleInfo, data)
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -26,10 +14,10 @@ const request = {
 				});
 		});
 	},
-	updateUser: (data: any) => {
+	deleteArticle: (id) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.updateUserInfo, data)
+				.post(base.deleteArticle, { id })
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -38,10 +26,10 @@ const request = {
 				});
 		});
 	},
-	deleteUser: (id) => {
+	istop: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.deleteUser, { id })
+				.post(base.istop, data)
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -50,10 +38,10 @@ const request = {
 				});
 		});
 	},
-	addUserInfo: (data) => {
+	delArticleTag: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.addUserInfo, data)
+				.post(base.delArticleTag, data)
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -62,10 +50,10 @@ const request = {
 				});
 		});
 	},
-	resetPassword: (id) => {
+	addArticleTag: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(base.resetPassword + '/' + id)
+				.post(base.addArticleTag, data)
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -74,41 +62,54 @@ const request = {
 				});
 		});
 	},
-	getCheckUser: () => {
+	getArticleEdit(id) {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(base.getCheckUser)
+				.post(base.getArticleEdit, { id })
 				.then((res) => {
-					resolve(res.data);
+					resolve(res);
 				})
-				.catch((error) => {
-					reject(error.data);
+				.catch((err) => {
+					reject(err.data);
 				});
 		});
 	},
-	userReviewPass: (ids) => {
+	uploadArticleInfo(params) {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.userReviewPass, { ids })
+				.post(base.uploadArticleInfo, params)
 				.then((res) => {
 					resolve(res.data);
 				})
-				.catch((error) => {
-					reject(error.data);
+				.catch((err) => {
+					reject(err.data);
 				});
 		});
 	},
-	userRefuseJoin: (ids) => {
+	uploadArticleeCover(params) {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.userRefuseJoin, { ids })
+				.post(base.uploadArticleeCover, params)
 				.then((res) => {
 					resolve(res.data);
 				})
-				.catch((error) => {
-					reject(error.data);
+				.catch((err) => {
+					reject(err.data);
+				});
+		});
+	},
+	delCoverImg(params) {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.delCoverImg, params)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((err) => {
+					reject(err.data);
 				});
 		});
 	},
 };
-export default request;
+
+export default managearticle;

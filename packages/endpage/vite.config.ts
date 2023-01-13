@@ -24,7 +24,7 @@ export default defineConfig({
 		},
 	},
 	define: {
-		// __VUE_I18N_LEGACY_API__: JSON.stringify(false), //没用
+		// __VUE_I18N_LEGACY_API__: JSON.stringify(true), //没用
 		// __VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
 		// __INTLIFY_PROD_DEVTOOLS__: JSON.stringify(false),
 	},

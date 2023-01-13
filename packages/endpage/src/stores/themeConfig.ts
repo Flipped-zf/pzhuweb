@@ -93,7 +93,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// 是否开启水印
 			isWartermark: false,
 			// 水印文案
-			wartermarkText: 'small@小柒',
+			wartermarkText: 'WEB专业团队',
 
 			/**
 			 * 其它设置
@@ -126,7 +126,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 全局网站标题 / 副标题
 			 */
 			// 网站主标题（菜单导航、浏览器当前网页标题）
-			globalTitle: '登录',
+			globalTitle: 'WEB团队',
 			// 网站副标题（登录页顶部文字）
 			globalViceTitle: 'WEB团队管理系统',
 			// 默认初始语言，可选值"<zh-cn|en|zh-tw>"，默认 zh-cn

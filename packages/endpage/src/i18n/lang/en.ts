@@ -7,6 +7,9 @@ export default {
 		systemRole: 'systemRole',
 		systemUser: 'systemUser',
 		personal: 'personal',
+		edithomeinfo: 'edithomeinfo',
+		managearticle: 'managearticle',
+		editarticle: 'editarticle',
 	},
 	staticRoutes: {
 		signIn: 'signIn',

@@ -99,7 +99,7 @@ function filterGrade(memberInfo) {
 	let myDate = {};
 	let grade = [];
 	memberInfo.forEach((item) => {
-		if (item.User.status == 3) {
+		if (item.User.status == 3 && item.id.length < 12) {
 			if (myDate['teacher'] == undefined) {
 				myDate['teacher'] = [];
 				grade.push({

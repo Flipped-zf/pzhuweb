@@ -7,6 +7,9 @@ export default {
 		systemRole: '角色管理',
 		systemUser: '用户管理',
 		personal: '个人中心',
+		edithomeinfo: '主页配置',
+		managearticle: '文章管理',
+		editarticle: '文章编辑',
 	},
 	staticRoutes: {
 		signIn: '登录',

@@ -1,30 +1,30 @@
 import base from './base';
 import axios from '../utils/request';
-const Qiniu = {
-	// 获取上传证书秘钥
-	getToken() {
+
+const edithome = {
+	getedithome: () => {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(`${base.qiniuToken}`)
+				.get(base.getedithome)
 				.then((res) => {
 					resolve(res.data);
 				})
-				.catch((err) => {
-					reject(err.data);
+				.catch((error) => {
+					reject(error.data);
 				});
 		});
 	},
-	delfile(params) {
+	updateHomeInfo: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(base.delfile, { params })
+				.post(base.updateHomeInfo, data)
 				.then((res) => {
 					resolve(res.data);
 				})
-				.catch((err) => {
-					reject(err.data);
+				.catch((error) => {
+					reject(error.data);
 				});
 		});
 	},
 };
-export default Qiniu;
+export default edithome;
