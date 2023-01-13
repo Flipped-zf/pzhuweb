@@ -10,6 +10,8 @@ export default {
 		edithomeinfo: 'edithomeinfo',
 		managearticle: 'managearticle',
 		editarticle: 'editarticle',
+		manageachi: 'achievement',
+		manageres: 'resource',
 	},
 	staticRoutes: {
 		signIn: 'signIn',

@@ -10,6 +10,8 @@ export default {
 		edithomeinfo: '主頁配置',
 		managearticle: '文章管理',
 		editarticle: '文章編輯',
+		manageachi: '成果管理',
+		manageres: '資源管理',
 	},
 	staticRoutes: {
 		signIn: '登入',

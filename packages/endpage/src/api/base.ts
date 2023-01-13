@@ -27,5 +27,16 @@ const base = {
 	uploadArticleInfo: '/backapi/uploadArticleInfo',
 	uploadArticleeCover: '/backapi/uploadArticleeCover',
 	delCoverImg: '/backapi/delCoverImg',
+
+	getAchievementInfo: '/backapi/getAchievementInfo',
+	delAchievement: '/backapi/delAchievement',
+	addAchievementTag: '/backapi/addAchievementTag',
+	delAchievementTag: '/backapi/delAchievementTag',
+	isShow: '/backapi/isShow',
+
+	getResourceInfo: '/backapi/getResourceInfo',
+	delResource: '/backapi/delResource',
+	addResourceTag: '/backapi/addResourceTag',
+	delResourceTag: '/backapi/delResourceTag',
 };
 export default base;

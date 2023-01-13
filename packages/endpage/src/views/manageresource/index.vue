@@ -4,7 +4,6 @@
 			<el-tab-pane label="文章列表" name="1">
 				<el-table :data="tableData" stripe style="width: 100%">
 					<el-table-column label="标题" prop="title" min-width="200px" />
-					<el-table-column label="关键字" prop="keyword" />
 					<el-table-column label="标签" prop="tag" min-width="125px">
 						<template #header>
 							<el-select @change="handleTag" v-model="tag" class="m-2" placeholder="Select" size="small">
@@ -12,9 +11,15 @@
 							</el-select>
 						</template>
 						<template #default="scope">
-							<el-tag disable-transitions>{{ scope.row.tag.name }}</el-tag>
+							<el-tag type="success" effect="plain" disable-transitions>{{ scope.row.tag.name }}</el-tag>
 						</template></el-table-column
 					>
+					<el-table-column label="附件" prop="attachment">
+						<template #default="scope">
+							<el-link v-if="scope.row.attachment" type="primary" :href="scope.row.attachment" target="_blank">附件下载</el-link>
+							<el-link v-else disabled>无附件</el-link>
+						</template>
+					</el-table-column>
 					<el-table-column label="作者" prop="author" min-width="140px">
 						<template #default="scope">
 							<div style="display: flex; align-items: center">
@@ -24,11 +29,6 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="发布时间" prop="createtime" />
-					<el-table-column label="轮番" prop="top">
-						<template #default="scope">
-							<el-switch v-model="scope.row.top" @change="handletop(scope.row)" inline-prompt active-text="是" inactive-text="否" />
-						</template>
-					</el-table-column>
 					<el-table-column fixed="right" min-width="100px">
 						<template #header>
 							<div class="flex" :style="{ justifyContent: 'center', alignItems: 'center' }">
@@ -39,8 +39,13 @@
 							</div>
 						</template>
 						<template #default="scope">
-							<el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-							<el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+							<!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button> -->
+							<el-row align="middle" justify="space-between">
+								<el-link v-if="scope.row.link" :href="scope.row.link" target="_blank">
+									<el-icon class="mr5"><View /></el-icon>链接
+								</el-link>
+								<el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+							</el-row>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -60,7 +65,7 @@
 				<changeTag v-model:tags="tags"></changeTag>
 			</el-tab-pane>
 		</el-tabs>
-		<el-dialog v-model="currentArticl.centerDialogVisible" title="确认删除这篇文章吗 ?" width="30%" center>
+		<el-dialog v-model="currentArticl.centerDialogVisible" title="确认删除这篇资源吗 ?" width="30%" center>
 			<span>{{ currentArticl.title }}</span>
 			<template #footer>
 				<span class="dialog-footer">
@@ -74,22 +79,20 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import manageArticle from '/@/api/managearticle';
+import respi from '/@/api/manageresource';
 import { formatDate } from '/@/utils/formatTime';
-import { Search } from '@element-plus/icons-vue';
+import { Search, View } from '@element-plus/icons-vue';
 import changeTag from './component/changeTag.vue';
-import { useRouter } from 'vue-router';
-import _ from 'lodash';
 interface article {
 	id: number;
 	title: string;
-	keyword: string;
 	tag: Object;
+	attachment: string;
 	author: Object;
 	createtime: '';
-	top: Boolean;
+	top: false;
+	link: string;
 }
-const router = useRouter();
 const search = ref('');
 const tag = ref(0);
 const pageInfo = reactive({
@@ -118,32 +121,10 @@ const handleCurrentChange = (val: number) => {
 	pageInfo.currentPage = val;
 	initData();
 };
-const handleEdit = (index: number, row: article) => {
-	console.log(index, row);
-	router.push({ path: '/editarticle', query: { id: row.id } });
-};
-const myrequest = _.debounce(async function (row) {
-	console.log(row.id, row.top);
-	await manageArticle
-		.istop({
-			checked: row.top,
-			id: row.id,
-		})
-		.then((res) => {
-			console.log(res);
-		});
-}, 1500);
-const handletop = (row) => {
-	myrequest(row);
-	// manageArticle
-	// 	.istop({
-	// 		checked: row.top,
-	// 		id: row.id,
-	// 	})
-	// 	.then((res) => {
-	// 		console.log(res);
-	// 	});
-};
+// const handleEdit = (index: number, row: article) => {
+// 	console.log(index, row);
+// 	router.push({ path: '/editarticle', query: { id: row.id } });
+// };
 const handleDelete = (index: number, row: article) => {
 	currentArticl.title = row.title;
 	currentArticl.id = row.id;
@@ -151,7 +132,7 @@ const handleDelete = (index: number, row: article) => {
 	currentArticl.index = index;
 };
 const ConfirmDel = async () => {
-	await manageArticle.deleteArticle(currentArticl.id).then((res) => {
+	await respi.delResource(currentArticl.id).then((res) => {
 		currentArticl.centerDialogVisible = false;
 	});
 	initData();
@@ -164,29 +145,30 @@ const handleTag = () => {
 };
 const initData = () => {
 	loading.value = true;
-	manageArticle
-		.getArticleInfo({
+	respi
+		.getResourceInfo({
 			page: pageInfo.currentPage,
 			pageSize: pageInfo.pageSize,
 			keywords: search.value,
 			mytag: tag.value,
 		})
 		.then((res) => {
-			tableData.value = res.data.articleList.map((item) => {
+			console.log(res.data);
+			tableData.value = res.data.Resource.map((item) => {
 				return {
 					id: item.id,
 					title: item.title,
-					keyword: item.keywords,
 					tag: {
-						id: item.Technology.id,
-						name: item.Technology.name,
+						id: item.ResourceType.id,
+						name: item.ResourceType.name,
 					},
+					attachment: item.attachment,
 					author: {
 						name: item.UserInfo.User.name,
 						avatar: item.UserInfo.avatar,
 					},
 					createtime: formatDate(new Date(item.created_at), 'YYYY-mm-dd'),
-					top: Boolean(item.tops),
+					link: item.link,
 				};
 			});
 			tags.value = res.data.tag.map((tag) => {
