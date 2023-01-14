@@ -119,7 +119,6 @@ const handleCurrentChange = (val: number) => {
 	initData();
 };
 const handleEdit = (index: number, row: article) => {
-	console.log(index, row);
 	router.push({ path: '/editarticle', query: { id: row.id } });
 };
 const myrequest = _.debounce(async function (row) {

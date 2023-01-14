@@ -124,7 +124,7 @@ const submitFormLogin = (formEl) => {
 					if (res.success) {
 						// store.state.userInfo.isTourist = false
 						// store.state.userInfo.id = loginData.stuNum
-						Session.set('token',res.data.token);
+						Session.setCookie('token',res.data.token);
 						if (!Session.getCookie('yourPassword')) {
 							Session.setCookie('yourPassword', md5(loginData.password));
 						}

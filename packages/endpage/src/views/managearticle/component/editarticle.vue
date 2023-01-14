@@ -250,7 +250,6 @@ async function submitForm() {
 }
 aApi.getArticleEdit(articleData.id).then((result) => {
 	const res = result.data;
-	console.log(res);
 	if (res.success) {
 		articleData.menu = res.data.menu;
 		articleData.technology = res.data.technology;

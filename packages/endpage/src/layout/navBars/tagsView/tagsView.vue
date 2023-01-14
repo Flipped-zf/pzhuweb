@@ -563,18 +563,19 @@ export default defineComponent({
 			initSortable();
 		});
 		// 路由更新时（组件内生命钩子） 
-		// onBeforeRouteUpdate(async (to) => { //没触发
-		// 	state.routeActive = setTagsViewHighlight(to);
-		// 	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
-		// 	await addTagsView(to.path, to);
-		// 	getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-		// });
-		onBeforeRouteLeave(async (to) => { //可以
+		onBeforeRouteUpdate(async (to) => { //又触发了
 			state.routeActive = setTagsViewHighlight(to);
 			state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
 			await addTagsView(to.path, to);
 			getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-		})
+		});
+		// onBeforeRouteLeave(async (to) => { //可以
+		// 	console.log(to)
+		// 	state.routeActive = setTagsViewHighlight(to);
+		// 	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
+		// 	await addTagsView(to.path, to);
+		// 	getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+		// })
 		// watch(
 		// 	() => route.path,
 		// 	async () => {

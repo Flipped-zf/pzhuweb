@@ -34,7 +34,7 @@ service.interceptors.request.use(
 		(<any>config.headers).common['x-csrf-token'] = csrfToken;
 		// 在发送请求之前做些什么 token
 		if (Session.get('token')) {
-			(<any>config.headers).common['Authorization'] = `${Session.get('token')}`;
+			(<any>config.headers).common['Authorization'] = `${Session.getCookie('token')}`;
 		}
 		return config;
 	},

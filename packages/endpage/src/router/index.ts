@@ -86,17 +86,19 @@ export function formatTwoStageRoutes(arr: any) {
 }
 
 // isRequestRoutes 为 true，则开启后端控制路由，路径：`/src/stores/themeConfig.ts`
-if (!isRequestRoutes) initFrontEndControlRoutes();
+if (!isRequestRoutes) await initFrontEndControlRoutes();
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
+	const token = Session.getCookie('token');
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
-	const token = Session.getCookie('token');
 	if (to.path === '/login' && !token) {
+		console.log(1);
 		next();
 		NProgress.done();
 	} else {
 		if (!token) {
+			console.log(2);
 			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
 			Session.clear();
 			ElMessage({
@@ -106,13 +108,14 @@ router.beforeEach(async (to, from, next) => {
 			});
 			NProgress.done();
 		} else if (token && to.path === '/login') {
+			console.log(3);
 			next('/home');
 			NProgress.done();
 		} else {
 			const storesRoutesList = useRoutesList(pinia);
 			const { routesList } = storeToRefs(storesRoutesList);
-
 			if (routesList.value.length === 0) {
+				console.log(4);
 				if (isRequestRoutes) {
 					// 后端控制路由：路由数据初始化，防止刷新时丢失
 					await initBackEndControlRoutes();
@@ -122,7 +125,8 @@ router.beforeEach(async (to, from, next) => {
 					next({ ...to, replace: true });
 				}
 			} else {
-				initFrontEndControlRoutes();
+				console.log(5);
+				// await initFrontEndControlRoutes();
 				next();
 			}
 		}
