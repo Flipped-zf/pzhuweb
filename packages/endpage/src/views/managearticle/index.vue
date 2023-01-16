@@ -23,7 +23,7 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="发布时间" prop="createtime" />
+					<el-table-column label="发布时间" prop="createtime" min-width="125px" />
 					<el-table-column label="轮番" prop="top">
 						<template #default="scope">
 							<el-switch v-model="scope.row.top" @change="handletop(scope.row)" inline-prompt active-text="是" inactive-text="否" />
@@ -44,7 +44,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row justify="end">
+				<el-row justify="end" class="mt20">
 					<el-pagination
 						v-model:current-page="pageInfo.currentPage"
 						v-model:page-size="pageInfo.pageSize"
@@ -107,7 +107,6 @@ const currentArticl = reactive({
 	centerDialogVisible: false,
 	title: '',
 	id: 0,
-	index: 0,
 });
 const activeName = ref('1');
 const handleSizeChange = (val: number) => {
@@ -119,7 +118,7 @@ const handleCurrentChange = (val: number) => {
 	initData();
 };
 const handleEdit = (index: number, row: article) => {
-	router.push({ path: '/editarticle', query: { id: row.id } });
+	router.push({ path: '/editarticle', query: { id: row.id, tagsViewName: '文章' + row.id } });
 };
 const myrequest = _.debounce(async function (row) {
 	console.log(row.id, row.top);
@@ -147,7 +146,6 @@ const handleDelete = (index: number, row: article) => {
 	currentArticl.title = row.title;
 	currentArticl.id = row.id;
 	currentArticl.centerDialogVisible = true;
-	currentArticl.index = index;
 };
 const ConfirmDel = async () => {
 	await manageArticle.deleteArticle(currentArticl.id).then((res) => {

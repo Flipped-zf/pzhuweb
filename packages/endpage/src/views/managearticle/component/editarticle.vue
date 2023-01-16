@@ -2,14 +2,15 @@
 	<div class="Edit" v-loading="articleData.loading">
 		<div style="border-bottom: 1px solid #e8e8e8">
 			<div id="toolbar-container"><!-- 工具栏 --></div>
-			<!--      <Toolbar-->
-			<!--        id="editor-toolbar"-->
-			<!--        style="border-bottom: 1px solid #ccc"-->
-			<!--        :editor="editorRef"-->
-			<!--        :defaultConfig="data.toolbarConfig"-->
-			<!--        :mode="data.mode"-->
-			<!--      />-->
 		</div>
+		<p align="center">
+			<el-progress
+				:style="{ height: percentage == 0 || percentage == 100 ? 0 : 'auto', overflow: 'hidden', transition: 'height 0.5s' }"
+				type="dashboard"
+				:percentage="percentage"
+				:color="colors"
+			/>
+		</p>
 		<div id="content">
 			<div id="editor-container">
 				<div id="title-container">
@@ -91,9 +92,12 @@ import { ref, onMounted, reactive, computed } from 'vue';
 import { createEditor, createToolbar } from '@wangeditor/editor';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import qiniu from '/@/utils/qiniu';
+import comainiu from '/@/utils/qiniu';
 import aApi from '/@/api/managearticle';
 import { Delete, Plus, UploadFilled } from '@element-plus/icons-vue';
+import qiniuAPI from '/@/api/qiniu';
+import Cookies from 'js-cookie';
+import * as qiniu from 'qiniu-js';
 
 const route = useRoute();
 const router = useRouter();
@@ -121,7 +125,60 @@ const data = reactive({
 // watchEffect(() => {
 // 	data.editor?.setHtml(data.valueHtml);
 // });
-
+const percentage = ref(0);
+const colors = [
+	{ color: '#f56c6c', percentage: 20 },
+	{ color: '#e6a23c', percentage: 40 },
+	{ color: '#5cb87a', percentage: 60 },
+	{ color: '#1989fa', percentage: 80 },
+	{ color: '#6f7ad3', percentage: 100 },
+];
+function qiniuUpload(file) {
+	return new Promise((resolve, reject) => {
+		qiniuAPI
+			.getToken()
+			.then((res) => {
+				const token = res.data;
+				let type = '';
+				if (file.name) {
+					const num = file.name.split('.');
+					type = num[num.length - 1];
+				} else {
+					type = file.type.split('/')[1];
+				}
+				const key = 'test/' + Cookies.get('yourStuNum') + Date.now() + '.' + type;
+				// let key = 'test'+Date.now();
+				const config = {
+					useCdnDomain: true, // 是否使用 cdn 加速域名
+					region: qiniu.region.z2, // 选择上传域名 华南
+				};
+				const putExtra = {
+					fname: file.name,
+					params: {},
+					mimeType: ['image/png', 'image/jpeg', 'image/gif'],
+				};
+				if (file.raw) {
+					file = file.raw;
+				}
+				const observable = qiniu.upload(file, key, token, putExtra, config);
+				const observer = {
+					next(res) {
+						percentage.value = parseInt(res.total.percent);
+					},
+					error(err) {
+						reject(err);
+					},
+					complete(res) {
+						resolve(res);
+					},
+				};
+				const subscription = observable.subscribe(observer);
+			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+}
 onMounted(() => {
 	const editorConfig = {
 		placeholder: '请输入内容...',
@@ -139,13 +196,32 @@ onMounted(() => {
 			let alt = '';
 			let href = '';
 			articleData.loading = true;
-			qiniu(file).then((res) => {
+			comainiu(file).then((res) => {
 				url = 'http://img.pzhuweb.cn/' + res.key;
-				alt = res.key;
-				imgList.value.push(res.key);
+				alt = url;
+				imgList.value.push(url);
 				articleData.loading = false;
 				insertFn(url, alt, href);
 			});
+		},
+	};
+	editorConfig.MENU_CONF['uploadVideo'] = {
+		// 自定义上传
+		async customUpload(file, insertFn) {
+			let url, poster;
+			// console.log(file);
+			qiniuUpload(file).then((res) => {
+				url = 'http://img.pzhuweb.cn/' + res.key;
+				poster = 'http://img.pzhuweb.cn/1664507883343banner.jpg';
+				imgList.value.push(url);
+				articleData.loading = false;
+				insertFn(url, poster);
+			});
+		},
+	};
+	editorConfig.hoverbarKeys = {
+		video: {
+			menuKeys: [], // 定义你想要的 menu keys
 		},
 	};
 	data.editor = createEditor({
@@ -214,7 +290,9 @@ async function submitForm() {
 	articleData.loading = true;
 	if (checkedValue()) {
 		const imgListok = data.editor.getElemsByType('image').map((item) => item.alt);
+		imgListok.push(...data.editor.getElemsByType('video').map((item) => item.src));
 		const delimglist = imgList.value.filter((item) => !imgListok.includes(item));
+		imgList.value = [];
 		const mydata = {
 			id: articleData.id,
 			title: articleData.title,
@@ -230,10 +308,10 @@ async function submitForm() {
 		aApi.uploadArticleInfo(mydata).then((res) => {
 			if (res.success) {
 				setTimeout(() => {
-					ElMessage({
-						message: '文章修改成功',
-						type: 'success',
-					});
+					// ElMessage({
+					// 	message: '文章修改成功',
+					// 	type: 'success',
+					// });
 					router.push('/managearticle');
 				}, 500);
 			} else {
@@ -261,7 +339,7 @@ aApi.getArticleEdit(articleData.id).then((result) => {
 		articleData.date = res.data.article[0].created_at ? new Date(res.data.article[0].created_at) : new Date();
 		// data.valueHtml = res.data.article[0].context ?? '';
 		data.editor?.dangerouslyInsertHtml(res.data.article[0].context ?? '');
-		imgList.value = res.data.article[0].raws.split(',');
+		imgList.value = res.data.article[0].raws ? res.data.article[0].raws.split(',') : [];
 	}
 });
 
@@ -271,7 +349,7 @@ const myhidden = ref(true); //遮罩
 const mygo = ref(false);
 const handlechange = async (uploadFile, uploadFiles) => {
 	mygo.value = true;
-	await qiniu(uploadFile)
+	await comainiu(uploadFile)
 		.then((res) => {
 			aApi
 				.uploadArticleeCover({
@@ -421,5 +499,8 @@ const handlePictureCardPreview = () => {
 #editor-text-area {
 	min-height: 900px;
 	margin-top: 20px;
+}
+:deep(#e-container video) {
+	width: 100%;
 }
 </style>

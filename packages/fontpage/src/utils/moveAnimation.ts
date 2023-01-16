@@ -43,8 +43,8 @@ export class myAnimation {
 		cancel.style.cssText = 'display: none';
 		this.element.appendChild(cancel);
 		this.cancel = cancel;
-		this.element.style.cssText = 'cursor:pointer;box-shadow: 20px 20px 60px #c6c5c6, -20px -20px 60px #ffffff,0 0 2vh 2vh hsl(0, 0%, 96%);';
-	}
+		this.element.style.cssText = 'cursor:pointer;box-shadow: 20px 20px 60px #c6c5c6, 5px 5px 20px rgba(76, 70, 124, 0.5)';
+	} //0 0 2vh 2vh hsl(0, 0%, 96%);
 	add() {
 		// const item = document.querySelector('.team')
 		// const yy = item?.getBoundingClientRect().top || 0

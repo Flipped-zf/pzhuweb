@@ -38,5 +38,12 @@ const base = {
 	delResource: '/backapi/delResource',
 	addResourceTag: '/backapi/addResourceTag',
 	delResourceTag: '/backapi/delResourceTag',
+
+	getAlbums: '/backapi/getAlbums',
+	delAlbum: '/backapi/delAlbum',
+	getPhotosByAlbumId: '/backapi/getPhotosByAlbumId',
+	addAlbumType: '/backapi/addAlbumType',
+	delAlbumType: '/backapi/delAlbumType',
+	updateAlbum: '/backapi/updateAlbum',
 };
 export default base;

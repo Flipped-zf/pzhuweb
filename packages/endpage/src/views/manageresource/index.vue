@@ -28,7 +28,7 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="发布时间" prop="createtime" />
+					<el-table-column label="发布时间" prop="createtime" min-width="125px" />
 					<el-table-column fixed="right" min-width="100px">
 						<template #header>
 							<div class="flex" :style="{ justifyContent: 'center', alignItems: 'center' }">
@@ -49,7 +49,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row justify="end">
+				<el-row justify="end" class="mt20">
 					<el-pagination
 						v-model:current-page="pageInfo.currentPage"
 						v-model:page-size="pageInfo.pageSize"
@@ -110,7 +110,6 @@ const currentArticl = reactive({
 	centerDialogVisible: false,
 	title: '',
 	id: 0,
-	index: 0,
 });
 const activeName = ref('1');
 const handleSizeChange = (val: number) => {
@@ -129,7 +128,6 @@ const handleDelete = (index: number, row: article) => {
 	currentArticl.title = row.title;
 	currentArticl.id = row.id;
 	currentArticl.centerDialogVisible = true;
-	currentArticl.index = index;
 };
 const ConfirmDel = async () => {
 	await respi.delResource(currentArticl.id).then((res) => {

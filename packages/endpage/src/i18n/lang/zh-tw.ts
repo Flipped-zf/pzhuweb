@@ -12,6 +12,9 @@ export default {
 		editarticle: '文章編輯',
 		manageachi: '成果管理',
 		manageres: '資源管理',
+		iframeweb: '團隊官網',
+		managealbum: '相册管理',
+		editalbum: '編輯相冊',
 	},
 	staticRoutes: {
 		signIn: '登入',

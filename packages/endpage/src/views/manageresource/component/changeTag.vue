@@ -47,16 +47,17 @@ const handleadd = () => {
 	}
 };
 const handleremove = (tag) => {
-	emit(
-		'update:tags',
-		props.tags?.filter((item) => item.value !== tag.value)
-	);
 	resapi
 		.delResourceTag({
 			tagid: tag.value,
 		})
 		.then((res) => {
-			console.log(res);
+			if (res.success) {
+				emit(
+					'update:tags',
+					props.tags?.filter((item) => item.value !== tag.value)
+				);
+			}
 		});
 };
 </script>

@@ -240,6 +240,11 @@ function getTechnology(id) {
 			grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 			justify-items: center;
 		}
+		@media screen and (max-width: 350px) {
+			.contentXinwen {
+				grid-template-columns: 1fr;
+			}
+		}
 
 		.bottomLoading {
 			width: 100%;

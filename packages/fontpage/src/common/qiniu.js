@@ -8,7 +8,6 @@ function qiniuUpload(file) {
 			.getToken()
 			.then((res) => {
 				const token = res.data;
-				console.log(token);
 				let type = '';
 				if (file.name) {
 					const num = file.name.split('.');

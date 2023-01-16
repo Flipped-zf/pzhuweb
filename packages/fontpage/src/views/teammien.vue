@@ -18,9 +18,13 @@
 							<div class="player-cover">
 								<div class="player-cover__item"></div>
 							</div>
-							<div style="padding: 30px 30px 30px 200px; width: 100%; word-break: break-all">sddddddddddgsdgsddddddddddddddddddddddddddddddd</div>
+							<div style="width: 100%; word-break: break-all">sddddddddddgsdgsddddddddddddddddddddddddddddddd</div>
 						</div>
-						<div class="Psecend myMove" data-swiper-parallax-x="-200" data-swiper-parallax-opacity="0.5"></div>
+						<div class="Psecend myMove" data-swiper-parallax-x="-200" data-swiper-parallax-opacity="0.5">
+							<div class="player-cover">
+								<div class="player-cover__item"></div>
+							</div>
+						</div>
 					</div>
 					<div class="swiper-slide">
 						<div class="Pfirst myMove" data-swiper-parallax-x="200" data-swiper-parallax-opacity="0.5"></div>
@@ -106,6 +110,8 @@ onMounted(() => {
 	overflow: hidden;
 	width: 100%;
 	height: 100vh;
+	background-image: url(../assets/background.04e7dbe7.svg);
+	background-size: 100%;
 }
 //@media screen and (max-width: 900px) {
 //  .team {
@@ -188,7 +194,7 @@ onMounted(() => {
 		background-color: pink;
 	}
 	.Psecend {
-		background-color: #0d0925;
+		background-color: pink;
 		left: 65%;
 		top: 100px;
 	}
@@ -197,6 +203,12 @@ onMounted(() => {
 		.Psecend {
 			width: 100%;
 			left: 0px;
+			.player-cover {
+				width: 100px;
+				height: 150px;
+				margin-left: 0;
+				margin-top: 20px;
+			}
 		}
 		.Pfirst {
 			top: 20px;

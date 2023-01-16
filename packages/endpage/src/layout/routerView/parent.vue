@@ -1,6 +1,6 @@
 <template>
 	<div class="h100">
-		<router-view v-slot="{ Component }">
+	<router-view v-slot="{ Component }">
 			<transition :name="setTransitionName" mode="out-in">
 				<keep-alive :include="getKeepAliveNames">
 					<component :is="Component" :key="refreshRouterViewKey" class="w100" />
@@ -86,3 +86,5 @@ export default defineComponent({
 	},
 });
 </script>
+<style scoped>
+</style>

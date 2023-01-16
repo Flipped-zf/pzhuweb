@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import manageAchi from '/@/api/manageachi';
+import albumapi from '/@/api/managealbum';
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({
@@ -24,21 +24,17 @@ const tagName = ref('');
 
 const handleadd = () => {
 	if (tagName.value) {
-		manageAchi
-			.addAchievementTag({
-				tagName: tagName.value,
-			})
-			.then((res) => {
-				if (res.success) {
-					emit('update:tags', [
-						...props.tags,
-						{
-							label: tagName.value,
-							value: res.tag.id,
-						},
-					]);
-				}
-			});
+		albumapi.addAlbumType(tagName.value).then((res) => {
+			if (res.success) {
+				emit('update:tags', [
+					...props.tags,
+					{
+						label: tagName.value,
+						value: res.tag.id,
+					},
+				]);
+			}
+		});
 	} else {
 		ElMessage({
 			message: '请输入标签名',
@@ -47,18 +43,15 @@ const handleadd = () => {
 	}
 };
 const handleremove = (tag) => {
-	manageAchi
-		.delAchievementTag({
-			tagid: tag.value,
-		})
-		.then((res) => {
-			if (res.success) {
-				emit(
-					'update:tags',
-					props.tags?.filter((item) => item.value !== tag.value)
-				);
-			}
-		});
+	albumapi.delAlbumType(tag.value).then((res) => {
+		console.log(res);
+		if (res.success) {
+			emit(
+				'update:tags',
+				props.tags?.filter((item) => item.value !== tag.value)
+			);
+		}
+	});
 };
 </script>
 

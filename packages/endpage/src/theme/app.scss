@@ -40,6 +40,12 @@ body,
 	overflow: hidden;
 	position: relative;
 }
+#app {
+	background-image: url(../assets/background.04e7dbe7.svg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
 
 /* 主布局样式
 ------------------------------- */
@@ -66,7 +72,7 @@ body,
 		padding: 0 !important;
 		overflow: hidden;
 		width: 100%;
-		background-color: var(--next-bg-main-color);
+		// background-color: var(--next-bg-main-color);
 	}
 	.el-scrollbar {
 		width: 100%;

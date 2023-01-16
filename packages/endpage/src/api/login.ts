@@ -2,10 +2,10 @@ import base from './base';
 import axios from '../utils/request';
 const Login = {
 	// 用户登录
-	login(params, code) {
+	login(data) {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(base.backlogin, params)
+				.post(base.backlogin, data)
 				.then((res) => {
 					resolve(res.data);
 				})

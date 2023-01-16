@@ -65,5 +65,12 @@ export const Session = {
 	removeAllCookies() {
 		Cookies.remove('yourStuNum');
 		Cookies.remove('yourPassword');
+		Cookies.remove('userInfo');
+	},
+	getObjCookie(key: string) {
+		return Cookies.get(key) ? JSON.parse(Cookies.get(key)) : null;
+	},
+	setObjCookie(key: string, val: any) {
+		Cookies.set(key, JSON.stringify(val), { expires: 1 });
 	},
 };

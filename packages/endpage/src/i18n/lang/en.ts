@@ -12,6 +12,9 @@ export default {
 		editarticle: 'editarticle',
 		manageachi: 'achievement',
 		manageres: 'resource',
+		iframeweb: 'iframeweb',
+		managealbum: 'managealbum',
+		editalbum: 'editalbum',
 	},
 	staticRoutes: {
 		signIn: 'signIn',

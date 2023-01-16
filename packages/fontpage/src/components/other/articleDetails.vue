@@ -75,11 +75,11 @@ function goDerails(num) {
 </script>
 <style></style>
 <style scoped lang="less">
-:deep(.media-wrap img) {
+:deep(.articleInfo-body img) {
 	width: 100%;
 }
-:deep(.media-wrap video) {
-	width: 100%;
+:deep(.articleInfo-body video) {
+	width: 100% !important;
 }
 
 .articleInfo {

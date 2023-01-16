@@ -6,3 +6,6 @@ axios.post 参数 data
 
 两种方式验证权限
 
+sessionStorage 两个标签页不共享
+session 浏览器关闭消失
+

@@ -20,9 +20,7 @@ export const useUserInfo = defineStore('userInfo', {
 	}),
 	actions: {
 		async setUserInfos(data?: any) {
-			if (Session.get('userInfo')) {
-				this.userInfos = Session.get('userInfo');
-			} else if (data) {
+			if (data) {
 				const userName = Cookies.get('userName');
 				const Roles: Array<string> = [data.roles];
 				const AuthBtnList: Array<string> = data.authBtnList.split(',');
@@ -36,7 +34,9 @@ export const useUserInfo = defineStore('userInfo', {
 				};
 				// 存储用户信息到浏览器缓存
 				this.userInfos = userInfos;
-				Session.set('userInfo', userInfos);
+				Session.setObjCookie('userInfo', userInfos);
+			} else if (Session.getObjCookie('userInfo')) {
+				this.userInfos = Session.getObjCookie('userInfo');
 			} else {
 				ElMessage({
 					showClose: true,
@@ -47,8 +47,8 @@ export const useUserInfo = defineStore('userInfo', {
 			}
 		},
 		async getUserInfo() {
-			if (Session.get('userInfo')) {
-				this.userInfos = Session.get('userInfo');
+			if (Session.getObjCookie('userInfo')) {
+				this.userInfos = Session.getObjCookie('userInfo');
 			}
 		},
 	},

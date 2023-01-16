@@ -29,10 +29,10 @@
 					/>
 					<span style="font-size: 12px; color: #999999">{{ article.UserInfo.User.name }}</span>
 				</span>
-				<p class="read-more" v-if="isPhone">
-					<a href="" @click.prevent.stop="goDerails('noPC')" style="color: #5ad67d">Read More</a>
-				</p>
 			</div>
+			<p class="read-more" v-if="isPhone">
+				<a href="" @click.prevent.stop="goDerails('noPC')" style="color: #5ad67d">Read More</a>
+			</p>
 		</div>
 	</div>
 </template>
@@ -100,7 +100,6 @@ function goDerails(s) {
 	z-index: 1;
 	display: block;
 	background: #ffffff;
-	min-width: 270px;
 	width: 350px;
 	height: 470px;
 	-webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
@@ -112,6 +111,11 @@ function goDerails(s) {
 	-o-transition: all 0.3s linear 0s;
 	transition: all 0.3s linear 0s;
 	margin: 0 0 30px 0;
+}
+@media screen and (max-width: 350px) {
+	.post-module {
+		width: 100%;
+	}
 }
 
 .post-module:hover .thumbnail img {
@@ -129,7 +133,7 @@ function goDerails(s) {
 
 .post-module .thumbnail img {
 	display: block;
-	width: 120%;
+	width: 100%;
 	-webkit-transition: all 0.3s linear 0s;
 	-moz-transition: all 0.3s linear 0s;
 	-ms-transition: all 0.3s linear 0s;
@@ -212,6 +216,8 @@ function goDerails(s) {
 .post-module .post-content .post-meta {
 	margin: 30px 0 0;
 	color: #999999;
+	line-height: 30px;
+	height: 30px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

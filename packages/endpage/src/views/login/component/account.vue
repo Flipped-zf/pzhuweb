@@ -110,14 +110,11 @@ const submitFormLogin = (formEl) => {
 	formEl.validate((valid) => {
 		if (valid) {
 			loginIng.value = true;
-			Login
-				.login( 
-					{
+			Login.login( {
 						id: loginData.stuNum,
 						password: mylogin(),
 						code: loginData.render
-					},
-					loginData.render
+					}
 				)
 				.then(async (res) => {
 					loginIng.value = false;
