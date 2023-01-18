@@ -16,11 +16,16 @@
 					>
 					<el-table-column label="相册名称" prop="name" min-width="200px">
 						<template #default="scope">
-							<el-link type="primary" @click="goalbums(scope.row.id, scope.row.name)">{{ scope.row.name }}</el-link>
+							<el-link type="primary" @click="goalbums(scope.row.id, scope.row.number, scope.row.name)">{{ scope.row.name }}</el-link>
 						</template>
 					</el-table-column>
 					<el-table-column label="相册描述" prop="description" min-width="200px"></el-table-column>
 					<el-table-column label="相片数量" prop="number"></el-table-column>
+					<el-table-column label="状态" prop="status">
+						<template #default="scope">
+							{{ scope.row.status ? '私有' : '公开' }}
+						</template>
+					</el-table-column>
 					<el-table-column label="发布时间" prop="createtime" min-width="125px" />
 					<el-table-column fixed="right" min-width="100px">
 						<template #header>
@@ -33,13 +38,14 @@
 						</template>
 						<template #default="scope">
 							<el-row align="middle" justify="space-between">
-								<el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+								<el-button size="small" @click="handleEdit(0, scope.row)">Edit</el-button>
 								<el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
 							</el-row>
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-row justify="end" class="mt20">
+				<el-row justify="space-between" class="mt20">
+					<el-button type="primary" plain class="ml20" @click="handleEdit(1)">创建相册</el-button>
 					<el-pagination
 						v-model:current-page="pageInfo.currentPage"
 						v-model:page-size="pageInfo.pageSize"
@@ -64,7 +70,7 @@
 				</span>
 			</template>
 		</el-dialog>
-		<el-dialog v-model="dialogFormVisible" title="修改相册信息">
+		<el-dialog v-model="dialogFormVisible" :title="statusaction ? '创建相册' : '修改相册信息'">
 			<el-form :model="formInfo" label-width="150px" v-loading="dialogloading">
 				<el-form-item label="相册名称">
 					<el-input v-model="formInfo.name" autocomplete="off" placeholder="请输入相册名称" />
@@ -78,7 +84,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="相册状态">
-					<el-switch v-model="formInfo.status" active-text="公开" inactive-text="私有" />
+					<el-switch v-model="formInfo.status" active-text="私有(仅后台可见)" inactive-text="公开" />
 				</el-form-item>
 			</el-form>
 			<template #footer>
@@ -108,7 +114,7 @@ interface article {
 	number: number;
 	createtime: string;
 	typeid: number;
-	status: number;
+	status: boolean;
 }
 const search = ref('');
 const tag = ref(0);
@@ -123,6 +129,7 @@ const tags = ref([]);
 
 const dialogFormVisible = ref(false);
 const dialogloading = ref(false);
+const statusaction = ref(0);
 const formInfo = reactive({
 	id: 0,
 	name: '',
@@ -137,30 +144,63 @@ const handelupdate = () => {
 			message: '请输入相册名称',
 		});
 		return;
+	} else if (formInfo.typeId == 0) {
+		ElMessage({
+			type: 'warning',
+			message: '请选择相册分类',
+		});
+		return;
 	}
 	dialogloading.value = true;
-	albumapi
-		.updateAlbum({
-			id: formInfo.id,
-			typeId: formInfo.typeId,
-			name: formInfo.name,
-			desc: formInfo.desc,
-			status: Number(formInfo.status),
-		})
-		.then((res) => {
-			if (res.success) {
-				dialogFormVisible.value = false;
-				initData();
-			}
-			dialogloading.value = false;
-		});
+	if (statusaction.value) {
+		albumapi
+			.createAlbum({
+				id: formInfo.id,
+				typeId: formInfo.typeId,
+				name: formInfo.name,
+				desc: formInfo.desc,
+				status: Number(formInfo.status),
+			})
+			.then((res) => {
+				if (res.success) {
+					dialogFormVisible.value = false;
+					initData();
+				}
+				dialogloading.value = false;
+			});
+	} else {
+		albumapi
+			.updateAlbum({
+				id: formInfo.id,
+				typeId: formInfo.typeId,
+				name: formInfo.name,
+				desc: formInfo.desc,
+				status: Number(formInfo.status),
+			})
+			.then((res) => {
+				if (res.success) {
+					dialogFormVisible.value = false;
+					initData();
+				}
+				dialogloading.value = false;
+			});
+	}
 };
-const handleEdit = (index: number, row: article) => {
-	formInfo.id = row.id;
-	formInfo.name = row.name;
-	formInfo.desc = row.description;
-	formInfo.typeId = row.typeid;
-	// formInfo.status = row.status;
+const handleEdit = (status: number, row?: article) => {
+	statusaction.value = status;
+	if (status) {
+		formInfo.id = 0;
+		formInfo.name = '';
+		formInfo.desc = '';
+		formInfo.typeId = 0;
+		formInfo.status = false;
+	} else {
+		formInfo.id = row.id;
+		formInfo.name = row.name;
+		formInfo.desc = row.description;
+		formInfo.typeId = row.typeid;
+		formInfo.status = row.status;
+	}
 	dialogFormVisible.value = true;
 	// router.push({ path: '/editarticle', query: { id: row.id } });
 };
@@ -186,9 +226,9 @@ const ConfirmDel = async () => {
 
 const router = useRouter();
 const activeName = ref('1');
-const goalbums = (id, name) => {
+const goalbums = (id, total, name) => {
 	// activeName.value = '2';
-	router.push({ path: '/editalbum', query: { id, tagsViewName: name } });
+	router.push({ path: '/editalbum', query: { id, total, tagsViewName: name } });
 };
 const handletab = () => {
 	initData();
@@ -220,6 +260,7 @@ const initData = () => {
 		.then((res) => {
 			console.log(res.data);
 			tableData.value = res.data.albums.map((item) => {
+				console.log(item.status);
 				return {
 					id: item.id,
 					author: item.user_id,
@@ -228,6 +269,7 @@ const initData = () => {
 						name: item.AlbumType.name,
 					},
 					name: item.name,
+					status: item.status == 1 ? false : true,
 					description: item.description,
 					typeid: item.type,
 					number: res.data.photoNum[item.id] || 0,

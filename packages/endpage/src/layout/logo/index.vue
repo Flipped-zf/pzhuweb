@@ -13,10 +13,10 @@ import { computed, defineComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 
-import logoMini from '/@/assets/logo-mini.svg';
+import logoMini from '/@/assets/logo.png';
 
 export default defineComponent({
-	name: 'layoutLogo',
+	name: 'LayoutLogo',
 	setup() {
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -52,6 +52,9 @@ export default defineComponent({
 	font-size: 16px;
 	cursor: pointer;
 	animation: logoAnimation 0.3s ease-in-out;
+	img {
+		width: 45px;
+	}
 	span {
 		white-space: nowrap;
 		display: inline-block;
@@ -72,6 +75,9 @@ export default defineComponent({
 	display: flex;
 	cursor: pointer;
 	animation: logoAnimation 0.3s ease-in-out;
+	img {
+		width: 45px;
+	}
 	&-img {
 		width: 20px;
 		margin: auto;

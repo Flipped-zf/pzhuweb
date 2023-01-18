@@ -16,7 +16,7 @@
 				<SubItem :chil="val.children" />
 			</el-sub-menu>
 			<template v-else>
-				<el-menu-item :index="val.path" :key="val.path">
+				<el-menu-item :index="val.path" :key="val.path" >
 					<SvgIcon :name="val.meta.icon" />
 					<template #title v-if="!val.meta.isLink || (val.meta.isLink && val.meta.isIframe)">
 						<span>{{ $t(val.meta.title) }}</span>

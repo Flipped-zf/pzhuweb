@@ -45,5 +45,9 @@ const base = {
 	addAlbumType: '/backapi/addAlbumType',
 	delAlbumType: '/backapi/delAlbumType',
 	updateAlbum: '/backapi/updateAlbum',
+	createAlbum: '/backapi/createAlbum',
+	uploadPhotos: '/backapi/uploadPhotos',
+	delPhotos: '/backapi/delPhotos',
+	movePhotos: '/backapi/movePhotos',
 };
 export default base;

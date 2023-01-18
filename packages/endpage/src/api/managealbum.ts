@@ -38,10 +38,22 @@ const albumapi = {
 				});
 		});
 	},
-	getPhotosByAlbumId: (params) => {
+	createAlbum: (data) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(base.getPhotosByAlbumId, { params })
+				.post(base.createAlbum, data)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	getPhotosByAlbumId: (id) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.get(base.getPhotosByAlbumId + '/' + id)
 				.then((res) => {
 					resolve(res.data);
 				})
@@ -66,6 +78,42 @@ const albumapi = {
 		return new Promise((resolve, reject) => {
 			axios
 				.get(`${base.delAlbumType}/${val}`)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	uploadPhotos: (data) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.uploadPhotos, data)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	delPhotos: (data) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.delPhotos, data)
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(error.data);
+				});
+		});
+	},
+	movePhotos: (data) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.movePhotos, data)
 				.then((res) => {
 					resolve(res.data);
 				})
