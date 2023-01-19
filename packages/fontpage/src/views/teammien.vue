@@ -152,7 +152,7 @@ onMounted(() => {
 				background-repeat: no-repeat;
 				background-position: center;
 				background-size: cover;
-				background-image: url('../assets/test/1.jpg');
+				background-image: url('../assets/img/loginbg.jpg');
 				width: 100%;
 				height: 100%;
 				border-radius: 15px;

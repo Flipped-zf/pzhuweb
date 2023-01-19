@@ -337,7 +337,7 @@ const handleSelect = (item) => {
 .back {
 	height: 100%;
 	width: 100%;
-	background: url('../../assets/test/myself3.jpg') center;
+	background: url('../../assets/img/loginbg.jpg') center;
 	background-size: cover;
 }
 
@@ -345,8 +345,13 @@ const handleSelect = (item) => {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 100vh;
+	height: calc(100vh - 60px);
 	overflow: hidden;
+}
+@media screen and (max-width: 800px) {
+	.container {
+		height: calc(100vh - 50px);
+	}
 }
 
 .screen {

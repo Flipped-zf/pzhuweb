@@ -38,4 +38,33 @@ export default defineConfig({
 			},
 		},
 	},
+	build: {
+		target: 'esnext',
+		assetsDir: './static',
+		chunkSizeWarningLimit: 500,
+		cssCodeSplit: true,
+		terserOptions: {
+			compress: {
+				// warnings: false,
+				drop_console: true, //打包时删除console
+				drop_debugger: true, //打包时删除 debugger
+				pure_funcs: ['console.log'],
+			},
+			output: {
+				// 去掉注释内容
+				comments: true,
+			},
+		},
+		rollupOptions: {
+			output: {
+				chunkFileNames: 'static/js/[name]-[hash].js',
+				entryFileNames: 'static/js/[name]-[hash].js',
+				assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+				manualChunks: {
+					vue: ['vue', 'vue-router', 'pinia'],
+					elementPlus: ['element-plus'],
+				},
+			},
+		},
+	},
 });

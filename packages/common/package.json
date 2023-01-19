@@ -7,8 +7,6 @@
   "description": "",
   "main": "./src/main.ts",
   "scripts": {
-    "build": " vite build --watch",
-    "build2": " tsc",
     "mybuild": "pnpm -F common run build"
   },
   "author": "",

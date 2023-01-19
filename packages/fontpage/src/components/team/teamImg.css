@@ -11,7 +11,7 @@
 .wrapper {
     position: relative;
     overflow: hidden;
-    background: url("../../assets/code1.jpg") center no-repeat;
+    background: url("../../assets/img/albumbg.jpg") center no-repeat;
     background-size: cover;
     height: 650px;
 }

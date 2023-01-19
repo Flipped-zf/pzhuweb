@@ -4,13 +4,11 @@ import 'nprogress/nprogress.css';
 import pinia from '/@/stores/index';
 import { storeToRefs } from 'pinia';
 import { useKeepALiveNames } from '/@/stores/keepAliveNames';
-import { useThemeConfig } from '/@/stores/themeConfig';
 import { Session } from '/@/utils/storage';
 import { staticRoutes } from '/@/router/route';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { ElMessage } from 'element-plus';
 import { useRoutesList } from '/@/stores/routesList';
-import { initBackEndControlRoutes } from '/@/router/backEnd';
 /**
  * 1、前端控制路由时：isRequestRoutes 为 false，需要写 roles，需要走 setFilterRoute 方法。
  * 2、后端控制路由时：isRequestRoutes 为 true，不需要写 roles，不需要走 setFilterRoute 方法），
@@ -21,10 +19,6 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
  */
 
 // 读取 `/src/stores/themeConfig.ts` 是否开启后端控制路由配置
-const storesThemeConfig = useThemeConfig(pinia);
-const { themeConfig } = storeToRefs(storesThemeConfig);
-const { isRequestRoutes } = themeConfig.value;
-if (isRequestRoutes) staticRoutes.splice(0, 1);
 
 /**
  * 创建一个可以被 Vue 应用程序使用的路由实例
@@ -86,7 +80,7 @@ export function formatTwoStageRoutes(arr: any) {
 }
 
 // isRequestRoutes 为 true，则开启后端控制路由，路径：`/src/stores/themeConfig.ts`
-if (!isRequestRoutes) await initFrontEndControlRoutes();
+await initFrontEndControlRoutes();
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
 	const token = Session.getCookie('token');
@@ -112,14 +106,7 @@ router.beforeEach(async (to, from, next) => {
 			const storesRoutesList = useRoutesList(pinia);
 			const { routesList } = storeToRefs(storesRoutesList);
 			if (routesList.value.length === 0) {
-				if (isRequestRoutes) {
-					// 后端控制路由：路由数据初始化，防止刷新时丢失
-					await initBackEndControlRoutes();
-
-					// 动态添加路由：防止非首页刷新时跳转回首页的问题
-					// 确保 addRoute() 时动态添加的路由已经被完全加载上去
-					next({ ...to, replace: true });
-				}
+				next({ ...to, replace: true });
 			} else {
 				// await initFrontEndControlRoutes();
 				next();

@@ -146,7 +146,7 @@ import RegisterMy from '../../views/login/registerMy.vue';
 import { Avatar, EditPen, SwitchButton, Promotion, Link } from '@element-plus/icons-vue';
 import auth from '../../utils/auth';
 import { useStore } from '@/store';
-import imgURL from '../../assets/test/1.jpg';
+import imgURL from '../../assets/img/tx.jpg';
 
 const userStore = useStore();
 const drawer = ref(false);
