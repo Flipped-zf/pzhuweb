@@ -3,7 +3,7 @@ on:
   #监听push操作
   push:
         # mian分支，你也可以改成其他分支
-    branches: [main]
+    branches: [master]
     paths: 
       - packages/endpage/**
       - packages/common/**
