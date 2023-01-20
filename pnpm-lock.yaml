@@ -127,30 +127,6 @@ importers:
       magnific-popup: 1.1.0
       swiper: 8.4.5
 
-    specifiers:
-      '@tommyzf/common': workspace:^1.0.0
-      echarts: ^5.4.1
-      mitt: ^3.0.0
-      sass: ^1.52.2
-      sass-loader: ^13.0.0
-      screenfull: ^6.0.2
-      sortablejs: ^1.15.0
-      vue-clipboard3: ^2.0.0
-      vue-grid-layout: ^2.4.0
-      vue-i18n: 9.1.10
-    dependencies:
-      '@tommyzf/common': link:../common
-      echarts: 5.4.1
-      mitt: 3.0.0
-      screenfull: 6.0.2
-      sortablejs: 1.15.0
-      vue-clipboard3: 2.0.0
-      vue-grid-layout: 2.4.0
-      vue-i18n: 9.1.10
-    devDependencies:
-      sass: 1.57.1
-      sass-loader: 13.2.0_sass@1.57.1
-
 packages:
 
   /@antfu/utils/0.7.2:
