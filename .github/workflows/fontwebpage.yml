@@ -5,6 +5,9 @@ on:
     branches:
       # mian分支，你也可以改成其他分支
       - main
+    paths: 
+      - packages/fontpage/**
+      - packages/common/**
 jobs:
   # 任务ID
   build:
@@ -13,13 +16,20 @@ jobs:
     # 步骤
     steps:
     # 使用别人的action
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: 6.10.0
+    - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'pnpm'
     # 步骤名称
-    - name: npm install
+    - name: pnpm install
       # 步骤执行指令
-      run: npm install
-    - name: npm run build
-      run: npm run build
+      run: pnpm i
+    - name: build fontWebPage
+      run: pnpm -F "fontpage" run build
     # 命名这个任务为发布Deploy
     - name: Deploy
       # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
@@ -32,5 +42,5 @@ jobs:
         user: ${{ secrets.USER_NAME }}
         pass: ${{ secrets.USER_PASS }}
         connect_timeout: 10s
-        local: './dist/*'
-        remote: /home/www/dist
+        local: './packages/fontpage/dist/*'
+        remote: /home/www/pzhuweb/fontpage
