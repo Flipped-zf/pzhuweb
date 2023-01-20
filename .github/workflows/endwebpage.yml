@@ -27,7 +27,7 @@ jobs:
     - name: pnpm install
       # 步骤执行指令
       run: pnpm i
-    - name: build fontWebPage
+    - name: build endWebPage
       run: pnpm -F "endpage" run build
     # 命名这个任务为发布Deploy
     - name: Deploy
