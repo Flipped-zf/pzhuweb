@@ -16,13 +16,13 @@ jobs:
     steps:
     # 使用别人的action
     - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 7.18.2
     - uses: actions/setup-node@v3
       with:
         node-version: '14'
         cache: 'pnpm'
-    - uses: pnpm/action-setup@v2
-        with:
-          version: 7.18.2
     # 步骤名称
     - name: pnpm install
       # 步骤执行指令
