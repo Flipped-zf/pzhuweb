@@ -1,10 +1,9 @@
-name: Build app and deploy to Tencent
+name: Build fontWebPage and deploy to Tencent
 on:
   #监听push操作
   push:
-    branches:
-      # mian分支，你也可以改成其他分支
-      - main
+        # mian分支，你也可以改成其他分支
+    branches: [main]
     paths: 
       - packages/fontpage/**
       - packages/common/**
