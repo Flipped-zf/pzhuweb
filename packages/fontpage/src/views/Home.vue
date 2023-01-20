@@ -15,7 +15,7 @@ import View2 from '@/components/home/view2.vue';
 import { reactive, onBeforeMount } from 'vue';
 import View3 from '@/components/home/view3.vue';
 import axios from '@/utils/request';
-import mybase from '@/api/mybase';
+import mybase from '@/api/myBase';
 import Myloading from '@/components/other/myloading.vue';
 
 let data = reactive({

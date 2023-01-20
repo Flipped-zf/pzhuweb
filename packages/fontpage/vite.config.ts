@@ -12,7 +12,7 @@ export default defineConfig({
 	base: './',
 	resolve: {
 		// 配置别名
-		alias: [{ find: '@', replacement: pathResolve('src') }],
+		alias: [{ find: '@', replacement: pathResolve('src') + '/' }],
 	},
 	plugins: [
 		AutoImport({
