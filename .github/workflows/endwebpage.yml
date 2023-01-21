@@ -32,18 +32,18 @@ jobs:
     # 命名这个任务为发布Deploy
     - name: Deploy
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-        env:
-          WELCOME: "ssh scp ssh pipelines"
-          LASTSSH: "Doing something after copying"
-        with:
-          host: ${{ secrets.USER_HOST }}
-          user: ${{ secrets.USER_NAME }}
-          pass: ${{ secrets.USER_PASS }}
-          connect_timeout: 10s
-          first_ssh: |
-            rm -rf /home/www/pzhuweb/endpage
-            mkdir -p /home/www/pzhuweb/endpage
-          scp: |
-            ./packages/endpage/dist/** => /home/www/pzhuweb/endpage
-          last_ssh: |
-            echo $LASTSSH
+      env:
+        WELCOME: "ssh scp ssh pipelines"
+        LASTSSH: "Doing something after copying"
+      with:
+        host: ${{ secrets.USER_HOST }}
+        user: ${{ secrets.USER_NAME }}
+        pass: ${{ secrets.USER_PASS }}
+        connect_timeout: 10s
+        first_ssh: |
+          rm -rf /home/www/pzhuweb/endpage
+          mkdir -p /home/www/pzhuweb/endpage
+        scp: |
+          ./packages/endpage/dist/** => /home/www/pzhuweb/endpage
+        last_ssh: |
+          echo $LASTSSH
