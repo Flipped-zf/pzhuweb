@@ -4,7 +4,7 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 import axios from './utils/request';
-axios.get('/my').then((res) => {
+axios.get('/').then((res) => {
 	console.log(res.data);
 });
 

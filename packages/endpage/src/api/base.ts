@@ -1,7 +1,7 @@
 const base = {
 	backlogin: '/backlogin',
 	qiniuToken: '/qiniuToken',
-	backRender: '/myapi/backRender',
+	backRender: '/api/backRender',
 	status: '/backapi/status',
 	delfile: '/backapi/delfile',
 

@@ -27,14 +27,10 @@ export default defineConfig({
 		port: 9797,
 		open: true,
 		proxy: {
-			'/api/my': {
+			'/api': {
 				target: 'http://127.0.0.1:7001',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\/my/, ''),
-			},
-			'/api': {
-				target: 'http://127.0.0.1:8081',
-				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''),
 			},
 		},
 	},
