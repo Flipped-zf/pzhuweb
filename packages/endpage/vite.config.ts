@@ -10,7 +10,7 @@ function pathResolve(dir: string) {
 	return resolve(process.cwd(), '.', dir);
 }
 export default defineConfig({
-	base: './',
+	base: '/back/',
 	resolve: {
 		// 配置别名
 		alias: [{ find: '/@', replacement: pathResolve('src') + '/' }],
