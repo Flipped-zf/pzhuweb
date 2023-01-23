@@ -235,7 +235,7 @@ function getTechnology(id) {
 		.contentRes {
 			//height: 80vh;
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 			justify-items: center;
 			grid-row-gap: 20px;
 		}

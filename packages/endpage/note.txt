@@ -9,3 +9,4 @@ axios.post 参数 data
 sessionStorage 两个标签页不共享
 session 浏览器关闭消失
 
+base -- 公共基础路径

@@ -67,7 +67,6 @@ onMounted(() => {});
 .resourcesContent {
 	height: 200px;
 	width: 350px;
-	max-width: 350px;
 	display: flex;
 	-webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);

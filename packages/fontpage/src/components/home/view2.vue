@@ -140,6 +140,7 @@ onMounted(() => {
 		}
 	}
 }
+
 #apple,
 #twitter,
 #github,
@@ -153,6 +154,14 @@ onMounted(() => {
 	//padding: 11px 19px;
 	margin: 0 40px;
 	transition: all 0.3s;
+}
+@media screen and (max-width: 768px) {
+	#apple,
+	#twitter,
+	#github,
+	#facebook {
+		margin: 0;
+	}
 }
 #apple:hover,
 #twitter:hover,
