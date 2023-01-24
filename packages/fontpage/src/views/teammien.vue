@@ -91,17 +91,22 @@ onMounted(() => {
 			},
 		},
 	});
-	window.addEventListener('scroll', function (e) {
-		const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-		const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-		const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-
-		if (scrollTop + clientHeight >= scrollHeight) {
+	const app = document.getElementById('app');
+	window.onscroll = function () {
+		// 获取距离顶部的距离
+		// var scrollTop = app.scrollTop;
+		// 获取可视区的高度
+		let windowHeight = app.clientHeight;
+		// 获取滚动条的总高度
+		let scrollHeight = app.scrollHeight;
+		let my = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset;
+		// console.log(my+'-'+scrollTop+'-'+windowHeight+'-'+scrollHeight)
+		if (my + windowHeight >= scrollHeight) {
 			mySwiper.enable();
 		} else {
 			mySwiper.disable();
 		}
-	});
+	};
 });
 </script>
 
@@ -111,7 +116,8 @@ onMounted(() => {
 	width: 100%;
 	height: 100vh;
 	background-image: url(../assets/background.04e7dbe7.svg);
-	background-size: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 //@media screen and (max-width: 900px) {
 //  .team {

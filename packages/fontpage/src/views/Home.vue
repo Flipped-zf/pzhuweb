@@ -39,6 +39,7 @@ onBeforeMount(async () => {
 		});
 		res.data.baseInfo = res.data.baseInfo.filter((f) => f.order != 1);
 		data.firstData = firstData;
+
 		data.all = res.data;
 		data.loading = false;
 	});

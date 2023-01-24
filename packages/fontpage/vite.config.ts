@@ -44,7 +44,6 @@ export default defineConfig({
 				// warnings: false,
 				drop_console: true, //打包时删除console
 				drop_debugger: true, //打包时删除 debugger
-				pure_funcs: ['console.log'],
 			},
 			output: {
 				// 去掉注释内容

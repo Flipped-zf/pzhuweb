@@ -1,6 +1,6 @@
 <template>
 	<main class="grid" :style="{ '--n': props.LFData.length, '--k': 0 }" ref="main">
-		<article class="grid" :style="{ '--i': index }" v-for="(item, index) in props.LFData" :key="item.id">
+		<article class="grid" :id="'a' + (index + 1)" :style="{ '--i': index }" v-for="(item, index) in props.LFData" :key="item.id">
 			<h3 class="c--ini fade">{{ '<<' + item.title + '>>' }}</h3>
 			<div class="c--ini fade content">
 				<img :src="item.UserInfo.avatar" class="myImg" />
@@ -9,13 +9,11 @@
 					<h4 class="date">{{ dayjs(item.created_at).format('YYYY-MM-DD') }}</h4>
 				</div>
 			</div>
-			<a class="nav c--ini fade" @click="anchor" style="cursor: pointer">Next: achievement</a>
-			<section
-				class="grid c--fin"
-				role="img"
-				aria-label="photo of previously described cat"
-				:style="{ '--img': 'url(' + item.posterlink + ')', '--m': 8 }"
-			>
+			<div class="nav c--ini fade">
+				<span class="my" @click.prevent="anchor($event, ((index - 1 + props.LFData.length) % props.LFData.length) + 1, 'p')">上一个</span>
+				<span class="my" @click.prevent="anchor($event, ((index + 1) % props.LFData.length) + 1, 'next')">下一个</span>
+			</div>
+			<section class="grid c--fin" role="img" :style="{ '--img': 'url(' + crurent + ')', '--m': 8 }">
 				<div class="slice" aria-hidden="true" style="--j: 0"></div>
 				<div class="slice" aria-hidden="true" style="--j: 1"></div>
 				<div class="slice" aria-hidden="true" style="--j: 2"></div>
@@ -25,7 +23,7 @@
 				<div class="slice" aria-hidden="true" style="--j: 6"></div>
 				<div class="slice" aria-hidden="true" style="--j: 7"></div>
 			</section>
-			<a class="det grid c--fin fade" :href="item.achievementlink || item.attachment" target="_blank">Learn more</a>
+			<a class="det grid c--fin fade" :href="item.achievementlink || item.attachment" target="_blank">了解更多</a>
 		</article>
 	</main>
 </template>
@@ -38,23 +36,52 @@ import dayjs from 'dayjs';
 const props = defineProps({
 	LFData: Array,
 });
+const posterlinks = ref([]);
+const crurent = ref('');
 
 const main = ref(null);
 onMounted(() => {
 	console.log(props.LFData);
+	posterlinks.value = props.LFData.map((item) => item.posterlink);
+	crurent.value = posterlinks.value[0];
 });
 
-function anchor() {
+function anchor(e, anchorName, action) {
+	console.log(anchorName);
+	/*找到锚点*/
+	anchorName = 'a' + anchorName;
+
+	let anchorElement = document.getElementById(anchorName);
+	/*如果对应id的锚点存在，就跳转到锚点*/
+	if (anchorElement) {
+		anchorElement.scrollIntoView();
+	}
 	let N = +main.value.style.getPropertyValue('--n');
 
 	let k = +main.value.style.getPropertyValue('--k');
-	main.value.style.setProperty('--k', (k = (k + 1) % N));
-	TweenMax.from('.myImg', {
-		opacity: 0,
-		y: -100,
-		duration: 1.5,
-		ease: Bounce.easeOut,
-	});
+	let _t = e.target;
+
+	if (_t.classList.contains('my')) {
+		if (action === 'next') {
+			main.value.style.setProperty('--k', (k = (k + 1) % N));
+			crurent.value = posterlinks.value[(k = (k + 1) % N)];
+			TweenMax.from('.myImg', {
+				opacity: 0,
+				y: -100,
+				duration: 1.5,
+				ease: Bounce.easeOut,
+			});
+		} else {
+			main.value.style.setProperty('--k', (k = (k - 1 + N) % N));
+			crurent.value = posterlinks.value[(k = (k - 1 + N) % N)];
+			TweenMax.from('.myImg', {
+				opacity: 0,
+				y: 100,
+				duration: 1.5,
+				ease: Bounce.easeOut,
+			});
+		}
+	}
 }
 </script>
 

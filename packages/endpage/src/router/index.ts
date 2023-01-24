@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import pinia from '/@/stores/index';
@@ -26,7 +26,7 @@ import { useRoutesList } from '/@/stores/routesList';
  * @link 参考：https://next.router.vuejs.org/zh/api/#createrouter
  */
 export const router = createRouter({
-	history: createWebHashHistory(),
+	history: createWebHistory('/back/'),
 	routes: staticRoutes,
 });
 /**

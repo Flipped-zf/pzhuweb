@@ -32,9 +32,9 @@ export default defineComponent({
 		const state = reactive({
 			i18nLocale: null,
 		});  
-		axios.get('').then((res) => {
-			console.log(res.data);
-		})
+		// axios.get('/').then((res) => {
+		// 	console.log(res.data);
+		// })
 		// 获取全局组件大小
 		const getGlobalComponentSize = computed(() => {
 			return other.globalComponentSize();

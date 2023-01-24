@@ -8,7 +8,7 @@
 					<a class="news__item">
 						<div class="news-date">
 							<span class="news-date__title">{{ item.AlbumType.name }}</span>
-							<span class="news-date__txt">{{ data.allPhoto[item.id] + ' 张' }}</span>
+							<span class="news-date__txt">{{ data.allPhoto[item.id] || 0 + ' 张' }}</span>
 						</div>
 						<div class="news__title">{{ item.name }}</div>
 
@@ -99,7 +99,7 @@ const titleInfo = computed(() => data.currentDate.albumInfo);
 const requestData = await album.getAlbums({
 	type: data.type,
 });
-
+console.log(requestData);
 data.allAlbum = requestData.data.albums;
 data.allPhoto = requestData.data.photoNum;
 
@@ -112,7 +112,7 @@ onMounted(() => {
 			newsItem.forEach(function (element, index) {
 				element.addEventListener('mouseover', function () {
 					let x = this.getBoundingClientRect().left - newslider.offsetLeft;
-					let y = 30;
+					let y = 15;
 					let width = this.getBoundingClientRect().width;
 					let height = this.getBoundingClientRect().height;
 
@@ -169,22 +169,17 @@ onMounted(() => {
 		},
 		on: {
 			init: function () {
-				let activeItem = document.querySelector('.swiper-slide-active');
-
-				let sliderItem = activeItem.querySelector('.news__item');
-
-				$('.swiper-slide-active .news__item').addClass('active');
-
-				let x = sliderItem.getBoundingClientRect().left - newslider.offsetLeft;
-				let y = 30;
-				let width = sliderItem.getBoundingClientRect().width;
-				let height = sliderItem.getBoundingClientRect().height;
-
-				$('.item-bg').addClass('active');
-
-				bg.style.width = width + 'px';
-				bg.style.height = height + 'px';
-				bg.style.transform = 'translateX(' + x + 'px ) translateY(' + y + 'px)';
+				// let activeItem = document.querySelector('.swiper-slide-active');
+				// let sliderItem = activeItem.querySelector('.news__item');
+				// $('.swiper-slide-active .news__item').addClass('active');
+				// let x = sliderItem.getBoundingClientRect().left - newslider.offsetLeft;
+				// let y = 30;
+				// let width = sliderItem.getBoundingClientRect().width;
+				// let height = sliderItem.getBoundingClientRect().height;
+				// $('.item-bg').addClass('active');
+				// bg.style.width = width + 'px';
+				// bg.style.height = height + 'px';
+				// bg.style.transform = 'translateX(' + x + 'px ) translateY(' + y + 'px)';
 			},
 		},
 	});
@@ -207,7 +202,7 @@ onMounted(() => {
 		$('.swiper-slide-active .news__item').addClass('active');
 
 		let x = sliderItem.getBoundingClientRect().left - newslider.offsetLeft;
-		let y = 30;
+		let y = 10;
 		let width = sliderItem.getBoundingClientRect().width;
 		let height = sliderItem.getBoundingClientRect().height;
 

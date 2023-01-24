@@ -14,7 +14,7 @@
 							{{ item.description }}
 						</span>
 						<span>{{ item.name }}</span>
-						<div class="right-img" data-swiper-parallax="300">
+						<div class="right-img" data-swiper-parallax="100">
 							<el-image style="width: 100%; height: 100%" :src="item.avatar" fit="cover" loading="lazy">
 								<template #error>
 									<div class="image-slot">

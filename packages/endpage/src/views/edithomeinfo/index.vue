@@ -2,7 +2,7 @@
 	<el-row justify="center">
 		<el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
 			<el-card shadow="always" v-loading="loading">
-				<el-tabs v-model="activeName" class="demo-tabs">
+				<el-tabs v-model="activeName" class="demo-tabs" @tab-change="handletab">
 					<el-tab-pane label="首页配置项" name="1">
 						<el-table :data="tableData.filter((item) => !!item.title)" stripe style="width: 100%">
 							<el-table-column prop="title" label="标题" width="180" />
@@ -102,9 +102,16 @@ const handleEdit = (index: number, row) => {
 	form.num = form.cover.length;
 	form.id = row.id;
 };
-edithome.getedithome().then((res) => {
-	tableData.value = res.baseInfo;
-});
+
+const initdata = () => {
+	edithome.getedithome().then((res) => {
+		tableData.value = res.baseInfo;
+	});
+};
+initdata();
+const handletab = () => {
+	initdata();
+};
 const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 const disabled = ref(false);

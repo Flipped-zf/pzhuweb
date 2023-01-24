@@ -364,15 +364,16 @@ onMounted(() => {
 				height: 75%;
 				padding: 30px;
 				@media (max-width: 1000px) {
-					padding: 0 0 0 30px;
+					padding: 0;
 				}
 
 				&-title {
 					width: 100%;
 					color: #333;
+					font-weight: bold;
 					font-size: 30px;
 					@media (max-width: 1000px) {
-						font-size: 22px;
+						font-size: 18px;
 					}
 				}
 
@@ -382,6 +383,10 @@ onMounted(() => {
 					margin-top: 20px;
 					color: #333;
 					line-height: 1.8;
+					@media (max-width: 400px) {
+						font-size: 12px;
+						margin-top: 10px;
+					}
 				}
 			}
 		}
@@ -427,8 +432,9 @@ onMounted(() => {
 					width: 100%;
 					text-align: center;
 					font-size: 30px;
+					font-weight: bold;
 					@media (max-width: 1000px) {
-						font-size: 22px;
+						font-size: 18px;
 					}
 					color: #333;
 				}
@@ -438,6 +444,10 @@ onMounted(() => {
 					font-size: 15px;
 					color: #333;
 					line-height: 1.8;
+					@media (max-width: 400px) {
+						font-size: 12px;
+						margin-top: 10px;
+					}
 				}
 			}
 		}
