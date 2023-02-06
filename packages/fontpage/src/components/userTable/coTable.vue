@@ -1,43 +1,54 @@
 <template>
-	<el-table v-loadmore="myLoad" size="large" :data="data.co" max-height="530" style="width: 100%">
-		<template #empty>
-			<el-skeleton v-if="isLoading" :rows="5" animated />
-			<span v-else>暂无数据</span>
-		</template>
-		<el-table-column :fixed="isPhone" label="发布时间" sortable prop="created_at">
-			<template #default="scope">
-				{{ dayjs(scope.row.created_at).format('YYYY-MM-DD') }}
+	<div>
+		<el-table v-loadmore="myLoad" size="large" :data="data.co" max-height="530" style="width: 100%">
+			<template #empty>
+				<el-skeleton v-if="isLoading" :rows="5" animated />
+				<span v-else>暂无数据</span>
 			</template>
-		</el-table-column>
-		<el-table-column min-width="100" label="技术标签" prop="Article.Technology.name">
-			<template #default="scope">
-				<el-tag class="ml-2" type="success">{{ scope.row.Article.Technology.name }}</el-tag>
+			<el-table-column :fixed="isPhone" label="发布时间" sortable prop="created_at">
+				<template #default="scope">
+					{{ dayjs(scope.row.created_at).format('YYYY-MM-DD') }}
+				</template>
+			</el-table-column>
+			<el-table-column min-width="100" label="技术标签" prop="Article.Technology.name">
+				<template #default="scope">
+					<el-tag class="ml-2" type="success">{{ scope.row.Article.Technology.name }}</el-tag>
+				</template>
+			</el-table-column>
+			<el-table-column min-width="300" label="文章名称" prop="Article.title" />
+			<el-table-column min-width="150" align="center">
+				<template #header>
+					<div style="display: flex; align-items: center">
+						<el-select size="small" style="width: 40%" @change="myChange" v-model="value" clearable placeholder="全部资源">
+							<el-option v-for="(item, index) in data.tagType" :key="item.index" :label="item.label" :value="item.value" />
+						</el-select>
+						<el-input :prefix-icon="Search" v-model="data.search" @keyup.enter.native="mySearch" size="small" placeholder="Type to search" />
+					</div>
+				</template>
+				<template #default="scope">
+					<el-button size="small" @click="gowatch(scope.row.Article.id)">阅读</el-button>
+					<el-button size="small" v-if="isMyself" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete </el-button>
+				</template>
+			</el-table-column>
+			<template #append>
+				<p v-if="isLoading">
+					<el-divider content-position="center">加载中...</el-divider>
+				</p>
+				<p v-if="isNot">
+					<el-divider content-position="center">到底了</el-divider>
+				</p>
 			</template>
-		</el-table-column>
-		<el-table-column min-width="300" label="文章名称" prop="Article.title" />
-		<el-table-column min-width="150" align="center">
-			<template #header>
-				<div style="display: flex; align-items: center">
-					<el-select size="small" style="width: 40%" @change="myChange" v-model="value" clearable placeholder="全部资源">
-						<el-option v-for="(item, index) in data.tagType" :key="item.index" :label="item.label" :value="item.value" />
-					</el-select>
-					<el-input :prefix-icon="Search" v-model="data.search" @keyup.enter.native="mySearch" size="small" placeholder="Type to search" />
-				</div>
+		</el-table>
+		<el-dialog v-model="currentArticl.centerDialogVisible" title="确认取消收藏吗 ?" width="30%" center>
+			<span>{{ currentArticl.title }}</span>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="currentArticl.centerDialogVisible = false">Cancel</el-button>
+					<el-button type="primary" @click="ConfirmDel">Confirm</el-button>
+				</span>
 			</template>
-			<template #default="scope" v-if="isMyself">
-				<el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit </el-button>
-				<el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete </el-button>
-			</template>
-		</el-table-column>
-		<template #append>
-			<p v-if="isLoading">
-				<el-divider content-position="center">加载中...</el-divider>
-			</p>
-			<p v-if="isNot">
-				<el-divider content-position="center">到底了</el-divider>
-			</p>
-		</template>
-	</el-table>
+		</el-dialog>
+	</div>
 </template>
 
 <script setup>
@@ -45,12 +56,13 @@ import { reactive, onMounted, inject, ref } from 'vue';
 import user from '../../api/user';
 import dayjs from 'dayjs';
 import { Search } from '@element-plus/icons-vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useStore } from '@/store';
 
 const userStore = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const isPhone = inject('isPhone');
 const isLoading = ref(true);
@@ -94,12 +106,28 @@ function getArticle() {
 		});
 }
 
-const handleEdit = (index, row) => {
-	console.log(index, row);
+const currentArticl = reactive({
+	centerDialogVisible: false,
+	title: '',
+	id: null,
+});
+const gowatch = (id) => {
+	router.push({ path: '/articleDetails', query: { id } });
 };
 const handleDelete = (index, row) => {
-	console.log(index, row);
+	data.deleteId = index;
+	currentArticl.title = row.Article.title;
+	currentArticl.id = row.id;
+	currentArticl.centerDialogVisible = true;
 };
+function ConfirmDel() {
+	user.delUserCollect(currentArticl.id).then((res) => {
+		if (res.success) {
+			data.co.splice(data.deleteId, 1);
+		}
+		currentArticl.centerDialogVisible = false;
+	});
+}
 
 function myChange(val) {
 	data.search = '';

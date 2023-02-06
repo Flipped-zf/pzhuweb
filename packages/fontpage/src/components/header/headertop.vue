@@ -147,6 +147,7 @@ import { Avatar, EditPen, SwitchButton, Promotion, Link } from '@element-plus/ic
 import auth from '../../utils/auth';
 import { useStore } from '@/store';
 import imgURL from '../../assets/img/tx.jpg';
+import Login from '@/api/login.js';
 
 const userStore = useStore();
 const drawer = ref(false);
@@ -231,6 +232,7 @@ function UserOut() {
 	auth.removeToken();
 	userStore.resetToken();
 	router.push('/login');
+	Login.logout();
 }
 
 function myToolPage(path) {

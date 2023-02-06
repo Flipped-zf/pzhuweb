@@ -13,7 +13,7 @@
     overflow: hidden;
     background: url("../../assets/img/albumbg.jpg") center no-repeat;
     background-size: cover;
-    height: 650px;
+    /* height: 650px; */
 }
 .wrapper::before {
     /*content: "";*/

@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUpdated, reactive } from 'vue';
+import { ref, onMounted, onUpdated, reactive, inject } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import { Back, TweenMax } from 'gsap';
 import axios from '../utils/request';
@@ -48,15 +48,16 @@ import ResourcesCard from '../components/other/resourcesCard.vue';
 
 const searchWord = ref('');
 const loading = ref(true);
-const currentDate = new Date().toDateString();
+// const currentDate = new Date().toDateString();
 const data = reactive({
 	resource: [],
 	resourceType: [],
 });
+const isPhone = inject('isPhone');
 
 const page = reactive({
 	beg: 0,
-	end: 0,
+	end: isPhone.value ? 0 : 5,
 	index: 0,
 	keywords: 'null',
 });

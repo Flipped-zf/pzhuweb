@@ -167,7 +167,7 @@ onMounted(() => {});
 	&:hover {
 		.resourcesImg {
 			.el-image {
-				transition: all 0.5s linear;
+				transition: all 0.5s ease-in;
 				transform: scale(1.1);
 			}
 		}

@@ -84,6 +84,8 @@ const page = reactive({
 });
 // axios.get(mybase.getArticle + '/0/8/0/null').then((res) => console.log(res));
 axios.get(mybase.getArticle + '/0/8/0/null').then((res) => {
+	console.log(res.data.data);
+
 	data.allSlideshow = res.data.data.slideshow;
 	data.allTechnology = res.data.data.technology;
 	data.allArticle = res.data.data.article;

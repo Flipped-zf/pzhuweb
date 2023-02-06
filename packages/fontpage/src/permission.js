@@ -7,7 +7,7 @@ import getPageTitle from './utils/get-page-title';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const whiteList = ['/login', '/home', '/achievement', '/dongtai', '/show', '/resourceshare', '/mien', '/articleDetails']; // no redirect whitelist
+const whiteList = ['/team', '/login', '/home', '/achievement', '/dongtai', '/show', '/resourceshare', '/mien', '/articleDetails']; // no redirect whitelist
 const whiteList2 = ['myArticle', 'myAchievement', 'myResources', 'myCollect'];
 // const backList = ['']
 

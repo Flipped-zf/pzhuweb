@@ -115,6 +115,11 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/team',
+		name: 'Team',
+		component: () => import('../components/home/teamintr.vue'),
+	},
+	{
 		path: '/:pathMatch(.*)*', // 页面不存在的情况下会跳到404页面
 		meta: { title: '页面不存在' },
 		component: () => import('@/views/errorPage.vue'),

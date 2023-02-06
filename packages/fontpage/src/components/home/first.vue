@@ -19,6 +19,9 @@
 				<p align="center"></p>
 			</div>
 		</div>
+		<div class="gobt">
+			<goviewbt></goviewbt>
+		</div>
 	</div>
 	<!--  {{firstData.cover}}-->
 </template>
@@ -26,6 +29,7 @@
 <script setup>
 import Swiper from 'swiper/bundle';
 import { onMounted } from 'vue';
+import goviewbt from './goviewbt.vue';
 
 const props = defineProps({
 	firstData: {
@@ -98,9 +102,20 @@ function fontDeno(s, s2) {
 </script>
 
 <style scoped lang="less">
+// @keyframes move {
+
+// }
 .firstview {
 	position: relative;
 	height: 81vh;
+	.gobt {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		z-index: 2;
+		margin: auto;
+	}
 
 	.ftest {
 		color: white;

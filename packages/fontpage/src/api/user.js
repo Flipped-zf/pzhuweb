@@ -146,10 +146,34 @@ const User = {
 				});
 		});
 	},
-	delUserCollect(params) {
+	delUserCollect(id) {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(`${base.delUserCollect}`, params)
+				.post(`${base.delUserCollect}`, { id })
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((err) => {
+					reject(err.data);
+				});
+		});
+	},
+	collectArticle(id) {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.collectArticle, { id })
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((err) => {
+					reject(err.data);
+				});
+		});
+	},
+	cancelCollect(id) {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(base.cancelCollect, { id })
 				.then((res) => {
 					resolve(res.data);
 				})

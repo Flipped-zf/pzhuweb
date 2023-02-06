@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" v-loading="loading">
 		<div class="news-slider" id="news-slider">
 			<div class="item-bg"></div>
 
@@ -59,6 +59,11 @@
 				</symbol>
 			</defs>
 		</svg>
+		<div style="text-align: center; margin-bottom: 5px">
+			<el-select v-model="data.type" class="m-2" placeholder="Select" @change="handlechange">
+				<el-option v-for="item in data.albumType" :key="item.value" :label="item.label" :value="item.value" />
+			</el-select>
+		</div>
 	</div>
 	<el-dialog v-model="visible" :show-close="false" :width="isPhone ? '90%' : '50%'">
 		<template #header="{ close, titleId, titleClass }">
@@ -85,24 +90,32 @@ import { CircleCloseFilled } from '@element-plus/icons-vue';
 import ImgShow from './imgShow.vue';
 import dayjs from 'dayjs';
 const data = reactive({
-	type: 0,
+	type: 6,
 	keywords: 'null',
 	id: 1,
 	allAlbum: [],
+	albumType: [],
 	allPhoto: {},
 	currentDate: {},
 });
+const loading = ref(true);
 const visible = ref(false);
 const isPhone = inject('isPhone');
 const titleInfo = computed(() => data.currentDate.albumInfo);
-
-const requestData = await album.getAlbums({
-	type: data.type,
-});
-console.log(requestData);
-data.allAlbum = requestData.data.albums;
-data.allPhoto = requestData.data.photoNum;
-
+const initdata = async () => {
+	const requestData = await album.getAlbums({
+		type: data.type,
+	});
+	console.log(requestData);
+	data.allAlbum = requestData.data.albums;
+	data.allPhoto = requestData.data.photoNum;
+	data.albumType = requestData.data.albumTypes;
+	loading.value = false;
+};
+await initdata();
+const handlechange = () => {
+	initdata();
+};
 onMounted(() => {
 	let bg = document.querySelector('.item-bg');
 	let newslider = document.querySelector('.news-slider');
@@ -231,6 +244,7 @@ function getDatesId() {
 		.then((res) => {
 			console.log(res);
 			data.currentDate = res.data;
+			loading.value.false;
 		});
 }
 </script>

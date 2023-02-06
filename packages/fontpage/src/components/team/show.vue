@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Bounce, TweenMax } from 'gsap';
 import dayjs from 'dayjs';
 
@@ -40,9 +40,9 @@ const props = defineProps({
 });
 
 const main = ref(null);
-onMounted(() => {
-	console.log(props.LFData);
-});
+// onMounted(() => {
+// 	console.log(props.LFData);
+// });
 
 function anchor() {
 	let N = +main.value.style.getPropertyValue('--n');

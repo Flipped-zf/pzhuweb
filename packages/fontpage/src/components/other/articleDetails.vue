@@ -18,6 +18,7 @@
 						<i class="iconfont icon-rili" style="vertical-align: center; margin-right: 5px"></i>
 						{{ dayjs(data.article[0].created_at).format('YYYY-MM-DD') }}
 					</p>
+					<el-button type="primary" style="margin-left: 20px" @click="changeCol" v-if="isLogin">{{ collect ? '取消收藏' : '收藏' }}</el-button>
 				</div>
 			</div>
 			<div class="articleInfo-header-shadow"></div>
@@ -42,7 +43,7 @@
 </template>
 
 <script setup>
-import { reactive, onUpdated } from 'vue';
+import { reactive, onUpdated, ref, computed } from 'vue';
 import axios from '../../utils/request';
 import mybase from '../../api/myBase';
 import { useRoute } from 'vue-router';
@@ -50,18 +51,26 @@ import Myloading from './myloading.vue';
 import dayjs from 'dayjs';
 import router from '../../router';
 import { TweenMax, Back } from 'gsap';
+import _ from 'lodash';
+import User from '@/api/user.js';
+import { useStore } from '@/store';
 
 const route = useRoute();
+const userStore = useStore();
+const collect = ref(false);
+const isLogin = computed(() => {
+	return !!userStore.token;
+});
 const data = reactive({
 	article: [],
 	recommends: [],
 	loading: true,
 });
 axios.get(mybase.getArticleInfo + `/${route.query.id}`).then((res) => {
-	console.log(res.data.data);
 	data.article = res.data.data.article;
 	data.recommends = res.data.data.recommend;
 	data.loading = false;
+	collect.value = res.data.data.iscollect;
 });
 
 onUpdated(() => {
@@ -72,6 +81,29 @@ onUpdated(() => {
 function goDerails(num) {
 	router.push({ path: '/articleDetails', query: { id: num } });
 }
+
+// const changeCol = () => {
+// 	myrequest();
+// };
+
+const changeCol = _.debounce(function () {
+	// collect.value = !collect.value;
+	if (collect.value) {
+		User.cancelCollect(route.query.id).then((res) => {
+			// console.log(res);
+			if (res.success) {
+				collect.value = false;
+			}
+		});
+	} else {
+		User.collectArticle(route.query.id).then((res) => {
+			// console.log(res);
+			if (res.success) {
+				collect.value = true;
+			}
+		});
+	}
+}, 1500);
 </script>
 <style></style>
 <style scoped lang="less">

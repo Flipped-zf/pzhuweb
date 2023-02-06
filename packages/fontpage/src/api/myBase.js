@@ -56,5 +56,11 @@ const base = {
 	delUserArticle: '/fontapi/delUserArticle',
 	getMediaItems: '/fontapi/getMediaItems',
 	uploadArticleResource: '/fontapi/uploadArticleResource',
+
+	delUserCollect: '/fontapi/delUserCollect',
+	collectArticle: '/fontapi/collectArticle',
+	cancelCollect: '/fontapi/cancelCollect',
+
+	logout: '/fontapi/logout',
 };
 export default base;

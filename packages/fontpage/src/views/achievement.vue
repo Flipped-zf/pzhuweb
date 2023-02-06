@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUpdated, reactive } from 'vue';
+import { ref, onMounted, onUpdated, reactive, inject } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import { Back, TweenMax } from 'gsap';
 import axios from '../utils/request';
@@ -52,24 +52,23 @@ const data = reactive({
 	achievementByPage: [],
 	achievementType: [],
 });
-
+const loading2 = ref(false);
+const count = ref(1);
+const end = ref(false);
+const isPhone = inject('isPhone');
 const page = reactive({
 	beg: 0,
-	end: 0,
+	end: isPhone.value ? 0 : 5,
 	index: 0,
 	keywords: 'null',
 });
 
-const loading2 = ref(false);
-const count = ref(1);
-const end = ref(false);
 // axios.get(base.getAchievement + '/0/10/0/null').then((res) => {
 // 	data.achievementByPage = res.data.data.achievementByPage;
 // 	data.achievementType = res.data.data.achievementType;
 // 	loading.value = false;
 // });
 getArticle().then((res) => {
-	console.log(res.data);
 	data.achievementByPage = res.data.data.ac;
 	data.achievementType = res.data.data.acType;
 	loading.value = false;
@@ -179,7 +178,7 @@ function getTechnology(id) {
 	color: #999999;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
 	#mainContent2 {
 		width: 100vw;
 
