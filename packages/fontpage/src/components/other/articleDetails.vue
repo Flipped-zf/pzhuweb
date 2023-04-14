@@ -108,7 +108,8 @@ const changeCol = _.debounce(function () {
 <style></style>
 <style scoped lang="less">
 :deep(.articleInfo-body img) {
-	width: 100%;
+	// width: 100%;
+	max-width: 100%;
 }
 :deep(.articleInfo-body video) {
 	width: 100% !important;
